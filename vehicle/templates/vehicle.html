@@ -1,0 +1,140 @@
+
+{% extends "home_vehicle.html" %}
+ {% load static %} 
+ {% block main_content %}
+<div class="container">
+  <div class="header">
+    <input placeholder="Địa điểm nhận xe" type="text" />
+    <input type="date" />
+    <input type="time" />
+    <input type="date" />
+    <input type="time" />
+    <button>Tìm kiếm</button>
+  </div>
+  <div class="main">
+    <h2>Đi nhiều hơn, trả ít hơn</h2>
+    <div class="benefits">
+      <div class="benefit">
+        <h3>Genius</h3>
+        <p>
+          Don't đ, bạn đang là Genius Cấp 1 trong chương trình khách hàng thân
+          thiết của chúng tôi
+        </p>
+      </div>
+      <div class="benefit">
+        <h3>Giảm giá 10% cho chỗ nghỉ</h3>
+        <p>Tận hưởng giảm giá tại các chỗ nghỉ tham gia trên toàn cầu</p>
+      </div>
+      <div class="benefit">
+        <h3>Giảm 10% khi thuê xe</h3>
+        <p>Tiết kiệm cho một số xe cho thuê</p>
+      </div>
+      <div class="benefit">
+        <h3>Giảm giá 15% cho chỗ nghỉ</h3>
+        <p>Hoàn tất 5 đơn đặt để mở khóa Genius Cấp 2</p>
+      </div>
+    </div>
+    <div class="support">
+      <div class="support-item">
+        <img
+          alt="Support Icon"
+          height="50"
+          src="https://storage.googleapis.com/a1aa/image/CKuMeaZWQyR7JCD6DIcVzX8qzf4F8cCnxZr8voiJ5OFrnwiTA.jpg"
+          width="50"
+        />
+        <h3>Chúng tôi sẵn sàng hỗ trợ bạn</h3>
+        <p>Hỗ trợ khách hàng bằng hơn 30 ngôn ngữ</p>
+      </div>
+      <div class="support-item">
+        <img
+          alt="Free Cancellation Icon"
+          height="50"
+          src="https://storage.googleapis.com/a1aa/image/vGkmSgZSnCJHKZlj7fHDfRE1PffEhzQyEVdjTaBQLPT3eEWcC.jpg"
+          width="50"
+        />
+        <h3>Miễn phí hủy xe</h3>
+        <p>Liên đến 48 giờ trước khi nhận xe, đối với hầu hết đơn đặt</p>
+      </div>
+      <div class="support-item">
+        <img
+          alt="Reviews Icon"
+          height="50"
+          src="https://storage.googleapis.com/a1aa/image/aiTHn9H8UVrcEZZPq3Ifr6xsaNSb6WOgrctFiqAUGenunwiTA.jpg"
+          width="50"
+        />
+        <h3>Hơn 5 triệu đánh giá</h3>
+        <p>Bởi khách hàng thật đã được xác minh</p>
+      </div>
+    </div>
+    <div class="faq">
+      <h2>Các câu hỏi thường gặp</h2>
+      <div class="faq-item">
+        <h3>Tại sao tôi nên đặt thuê xe ở Việt Nam với Booking.com?</h3>
+        <button class="toggle-button">▼</button>
+        <div class="answer">
+          <p>
+            Chúng tôi tạo điều kiện dễ dàng để bạn tìm xe thuê phù hợp với nhu
+            cầu của mình. Sau đây là những gì chúng tôi mang lại: Bộ sưu tập xe
+            khổng lồ – từ xe hạng nhỏ đến SUV Hỗ trợ hơn 30 ngôn ngữ Miễn phí
+            hủy đến 48 giờ trước khi nhận xe cho hầu hết các đơn đặt.
+          </p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3>Tôi cần chuẩn bị gì để thuê một chiếc xe?</h3>
+        <button class="toggle-button">▼</button>
+        <div class="answer">
+          <p>
+            Booking.com cung cấp các lựa chọn đa dạng và giá tốt cho khách hàng
+            tại Việt Nam, với chính sách hỗ trợ linh hoạt.
+          </p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3>Tôi có đủ tuổi để thuê xe?</h3>
+        <button class="toggle-button">▼</button>
+        <div class="answer">
+          <p>
+            Booking.com cung cấp các lựa chọn đa dạng và giá tốt cho khách hàng
+            tại Việt Nam, với chính sách hỗ trợ linh hoạt.
+          </p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3>
+          Tôi có thể đặt xe cho bạn đời, bạn bè, đồng nghiệp, v.v. của mình
+          không?
+        </h3>
+        <button class="toggle-button">▼</button>
+        <div class="answer">
+          <p>
+            Booking.com cung cấp các lựa chọn đa dạng và giá tốt cho khách hàng
+            tại Việt Nam, với chính sách hỗ trợ linh hoạt.
+          </p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3>Tôi cần xem xét những gì khi lựa chọn một chiếc xe?</h3>
+        <button class="toggle-button">▼</button>
+        <div class="answer">
+          <p>
+            Booking.com cung cấp các lựa chọn đa dạng và giá tốt cho khách hàng
+            tại Việt Nam, với chính sách hỗ trợ linh hoạt.
+          </p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <h3>Tất cả các loại phí có được bao gồm trong giá thuê xe không?</h3>
+        <button class="toggle-button">▼</button>
+        <div class="answer">
+          <p>
+            Booking.com cung cấp các lựa chọn đa dạng và giá tốt cho khách hàng
+            tại Việt Nam, với chính sách hỗ trợ linh hoạt.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock main_content %}
+</div>
