@@ -1,0 +1,171 @@
+body {
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+.container {
+    max-width: 960px;
+    /* Giới hạn chiều rộng tối đa */
+    margin: 0 auto;
+    /* Canh giữa container */
+    padding: 0 20px;
+    /* Thêm khoảng cách padding hai bên */
+    
+}
+
+.header {
+    background-color: #003580;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header input,
+.header select {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.header input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.header button {
+    background-color: #ffb700;
+    color: #003580;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.main {
+    padding: 20px;
+}
+
+.main h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.main .benefits {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.main .benefits .benefit {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 23%;
+    text-align: center;
+}
+
+.main .benefits .benefit h3 {
+    font-size: 18px;
+    color: #003580;
+}
+
+.main .benefits .benefit p {
+    font-size: 14px;
+    color: #666;
+}
+
+.main .support {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.main .support .support-item {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 30%;
+    text-align: center;
+}
+
+.main .support .support-item img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.main .support .support-item h3 {
+    font-size: 18px;
+    color: #003580;
+}
+
+.main .support .support-item p {
+    font-size: 14px;
+    color: #666;
+}
+
+.main .faq {
+    margin-top: 40px;
+}
+
+.main .faq h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.main .faq .faq-item {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+.main .faq .faq-item h3 {
+    font-size: 18px;
+    color: #003580;
+}
+/* CSS cho câu hỏi FAQ */
+.faq-item {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+/* CSS cho nút mũi tên */
+.toggle-button {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    outline: none;
+}
+
+/* CSS cho phần câu trả lời, ẩn ban đầu */
+.answer {
+    display: none;
+    margin-top: 10px;
+}
+
+.answer p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Hiển thị phần câu trả lời khi được kích hoạt */
+.faq-item.active .answer {
+    display: block;
+}
