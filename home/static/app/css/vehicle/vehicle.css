@@ -5,22 +5,16 @@ body {
     background-color: #ffffff;
 }
 
-.container {
-    max-width: 960px;
-    /* Giới hạn chiều rộng tối đa */
-    margin: 0 auto;
-    /* Canh giữa container */
-    padding: 0 20px;
-    /* Thêm khoảng cách padding hai bên */
-    
-}
-
 .header {
     background-color: #003580;
     padding: 20px;
     display: flex;
+    flex-wrap: wrap;
+    /* Responsive */
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
+    /* Khoảng cách giữa các phần tử */
 }
 
 .header input,
@@ -31,8 +25,14 @@ body {
     border-radius: 5px;
 }
 
-.header input[type="checkbox"] {
-    margin-right: 5px;
+.header input[type="text"] {
+    flex: 1;
+    min-width: 150px;
+}
+
+.header input[type="date"],
+.header input[type="time"] {
+    width: 150px;
 }
 
 .header button {
@@ -56,7 +56,10 @@ body {
 .main .benefits {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+    /* Responsive cho benefits */
     margin-top: 20px;
+    gap: 10px;
 }
 
 .main .benefits .benefit {
@@ -66,6 +69,7 @@ body {
     padding: 20px;
     width: 23%;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .main .benefits .benefit h3 {
@@ -81,7 +85,10 @@ body {
 .main .support {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+    /* Responsive cho support items */
     margin-top: 40px;
+    gap: 10px;
 }
 
 .main .support .support-item {
@@ -91,6 +98,7 @@ body {
     padding: 20px;
     width: 30%;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .main .support .support-item img {
@@ -124,21 +132,13 @@ body {
     border-radius: 5px;
     padding: 20px;
     margin-top: 10px;
+    position: relative;
+    cursor: pointer;
 }
 
 .main .faq .faq-item h3 {
     font-size: 18px;
     color: #003580;
-}
-/* CSS cho câu hỏi FAQ */
-.faq-item {
-    position: relative;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin-top: 10px;
-    cursor: pointer;
 }
 
 /* CSS cho nút mũi tên */
@@ -168,4 +168,35 @@ body {
 /* Hiển thị phần câu trả lời khi được kích hoạt */
 .faq-item.active .answer {
     display: block;
+}
+
+/* Media Queries cho thiết bị nhỏ hơn (dưới 768px) */
+@media screen and (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header input,
+    .header button {
+        width: 100%;
+    }
+
+    .main .benefits .benefit,
+    .main .support .support-item {
+        width: 100%;
+    }
+}
+
+/* Media Queries cho thiết bị rất nhỏ (dưới 480px) */
+@media screen and (max-width: 480px) {
+
+    .header input[type="date"],
+    .header input[type="time"] {
+        width: 100%;
+    }
+
+    .header button {
+        width: 100%;
+    }
 }
