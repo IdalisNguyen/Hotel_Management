@@ -5,7 +5,8 @@
 <div class="login">
     <img src="{% static 'assets/img/login-bg.jpg' %}" alt="login image" class="login__img">
 
-    <form action="" class="login__form">
+    <form action="" method="POST" class="login__form">
+        {% csrf_token %}
         <h1 class="login__title">Register</h1>
 
         <div class="login__content">
@@ -13,7 +14,7 @@
                 <i class="ri-user-3-line login__icon"></i>
 
                 <div class="login__box-input">
-                    <input type="text" required class="login__input" id="login-username" placeholder=" ">
+                    <input type="text" required class="login__input" id="login-username" name="username" placeholder=" ">
                     <label for="login-username" class="login__label">Username</label>
                 </div>
             </div>
@@ -21,7 +22,7 @@
                 <i class="ri-user-3-line login__icon"></i>
 
                 <div class="login__box-input">
-                    <input type="email" required class="login__input" id="login-email" placeholder=" ">
+                    <input type="email" required class="login__input" id="login-email" name="email" placeholder=" ">
                     <label for="login-email" class="login__label">Email</label>
                 </div>
             </div>
@@ -30,7 +31,7 @@
                 <i class="ri-lock-2-line login__icon"></i>
 
                 <div class="login__box-input">
-                    <input type="password" required class="login__input" id="login-pass" placeholder=" ">
+                    <input type="password" required class="login__input" id="login-pass" name="password" placeholder=" ">
                     <label for="login-pass" class="login__label">Password</label>
                     <i class="ri-eye-off-line login__eye" id="login-eye"></i>
                 </div>
@@ -49,8 +50,14 @@
         <button type="submit" class="login__button">Register</button>
 
         <p class="login__register">
-            Already have an account? <a href="#">Login</a>
+            Already have an account? <a href="{% url 'login' %}">Login</a>
         </p>
     </form>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 </div>
 {% endblock main_content %}
