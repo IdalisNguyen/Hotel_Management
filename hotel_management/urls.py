@@ -21,5 +21,12 @@ from home import views as home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',home.get_home),
-    path('room', include('room.urls'))
+    path('about/', include('about.urls')),
+    path('room', include('room.urls')),
+    path('food', include('food.urls')),
+    path('vehicle', include('vehicle.urls')),
+    path('user', include('user.urls')),
+    path('customer', include('customer.urls')),
+    path('statistic/', include('statistic.urls')),
+    
 ]

@@ -1,0 +1,181 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block main_content %}
+<div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8 order-md-1">
+        <h1>Sai Gon Hotel Bui Vien Walking Street</h1>
+        <p><i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+          <span class="badge bg-warning">7.1</span> Good
+        </p>
+        <p><i class="fa fa-map-marker-alt"></i> 40/13 Bùi Viện, Phạm Ngũ Lão, District 1, Hồ Chí Minh City</p>
+      </div>
+      <div class="col-md-4 order-md-0 d-flex justify-content-end align-items-center">
+        <button class="btn btn-primary">Reserve</button>
+      </div>
+    </div>
+  
+    <div class="row mt-4">
+      <div class="col-md-8">
+        <img src="https://via.placeholder.com/600x400" class="img-fluid" alt="Main Room Image">
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-6 mb-2">
+            <img src="https://via.placeholder.com/300x200" class="img-fluid" alt="Room Image">
+          </div>
+          <div class="col-6 mb-2">
+            <img src="https://via.placeholder.com/300x200" class="img-fluid" alt="Room Image">
+          </div>
+          <div class="col-6 col-md-3 mb-2">
+            <img src="https://via.placeholder.com/300x200" class="img-fluid" alt="Room Image">
+          </div>
+          <div class="col-6 col-md-3 mb-2">
+            <img src="https://via.placeholder.com/300x200" class="img-fluid" alt="Room Image">
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="row mt-4">
+      <div class="col-md-8">
+        <h4>Guests who stayed here loved:</h4>
+        <div class="review-box border p-3 mb-3">
+          <p>"The hotel is in a crowded area, which can be noisy in the evening, and there are so many options for entertainment and dining—so many that we..."</p>
+          <p><strong>T</strong> - Japan</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h4>Property Highlights</h4>
+        <ul>
+          <li>Great Location</li>
+          <li>Free WiFi</li>
+          <li>Excellent staff</li>
+        </ul>
+      </div>
+    </div>
+  
+    <!-- New Section: Availability -->
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h4>Most popular facilities</h4>
+        <ul class="list-unstyled">
+          <li><i class="fa fa-check"></i> Free WiFi</li>
+          <li><i class="fa fa-check"></i> Family rooms</li>
+          <li><i class="fa fa-check"></i> Non-smoking rooms</li>
+          <li><i class="fa fa-check"></i> Free parking</li>
+          <li><i class="fa fa-check"></i> 24-hour front desk</li>
+          <li><i class="fa fa-check"></i> Room service</li>
+          <li><i class="fa fa-check"></i> Daily housekeeping</li>
+        </ul>
+  
+        <h4 class="mt-4">Availability</h4>
+        <div class="border p-3">
+          <form>
+            <div class="mb-3">
+              <label for="date" class="form-label">Select check-in date:</label>
+              <input type="date" class="form-control" id="date" required>
+            </div>
+            <div class="mb-3">
+              <label for="guests" class="form-label">Number of guests:</label>
+              <input type="number" class="form-control" id="guests" min="1" value="1" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Show prices</button>
+          </form>
+        </div>
+  
+        <h4 class="mt-4">Room types</h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Room type</th>
+              <th scope="col">Price</th>
+              <th scope="col">Availability</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Triple Room with Balcony</td>
+              <td>$120</td>
+              <td><span class="badge bg-success">Available</span></td>
+              <td><button class="btn btn-link">Show prices</button></td>
+            </tr>
+            <tr>
+              <td>Standard King Room with Window</td>
+              <td>$100</td>
+              <td><span class="badge bg-danger">Not Available</span></td>
+              <td><button class="btn btn-link" disabled>Show prices</button></td>
+            </tr>
+            <tr>
+              <td>Standard Double Room</td>
+              <td>$90</td>
+              <td><span class="badge bg-success">Available</span></td>
+              <td><button class="btn btn-link">Show prices</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <!-- New Section: Guest Reviews -->
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <h4>Guest reviews</h4>
+        <div class="review-summary mb-3">
+          <span class="badge bg-warning">7.7</span> Good - 745 reviews
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <h5>Categories:</h5>
+            <ul class="list-unstyled">
+              <li>Comfort: <strong>8.6</strong></li>
+              <li>Facilities: <strong>8.1</strong></li>
+              <li>Value for money: <strong>8.1</strong></li>
+              <li>Location: <strong>9.3</strong></li>
+            </ul>
+          </div>
+          <div class="col-md-9">
+            <h5>Select top topics to read reviews:</h5>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="noise" value="noise">
+              <label class="form-check-label" for="noise">Noise</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="clean" value="clean">
+              <label class="form-check-label" for="clean">Clean</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="location" value="location">
+              <label class="form-check-label" for="location">Location</label>
+            </div>
+          </div>
+        </div>
+  
+        <h5 class="mt-4">Guests who stayed here loved:</h5>
+        <div class="review-box border p-3 mb-3">
+          <p>"The hotel is in a crowded area, which can be noisy in the evening, and there are so many options for entertainment and dining—so many that we..."</p>
+          <p><strong>T</strong> - Japan</p>
+        </div>
+        <div class="review-box border p-3 mb-3">
+          <p>"Beautifully situated, with many nearby services, excellent for exploring Vietnam's culture and experiences. Highly recommend for curious tourists because it..."</p>
+          <p><strong>Carma</strong> - United States</p>
+        </div>
+        <div class="review-box border p-3 mb-3">
+          <p>"The central location is very convenient for accessing tourist attractions, and the staff are very accommodating and friendly!"</p>
+          <p><strong>Marge</strong> - Unknown</p>
+        </div>
+  
+        <h5 class="mt-4">Travellers are asking</h5>
+        <div class="border p-3 mb-3">
+          <p><strong>Is there an airport shuttle service?</strong></p>
+          <p><strong>Are there restaurants nearby?</strong></p>
+        </div>
+  
+        <h5>Still looking?</h5>
+        <button class="btn btn-secondary">Ask a question</button>
+      </div>
+    </div>
+  </div>
+{% endblock main_content %}
