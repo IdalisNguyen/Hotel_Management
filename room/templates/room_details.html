@@ -3,18 +3,20 @@
 
 {% block main_content %}
 <div class="container mt-4">
-    <div class="row">
-      <div class="col-md-8 order-md-1">
-        <h1>Sai Gon Hotel Bui Vien Walking Street</h1>
-        <p><i class="fa fa-star"></i> <i class="fa fa-star"></i> 
-          <span class="badge bg-warning">7.1</span> Good
+  <div class="row">
+    <div class="col-md-8 order-md-1">
+        <h1>{{ room.name }}</h1>
+        <p><i class="fa fa-star"></i> <i class="fa fa-star"></i>
+            <span class="badge bg-warning">7.1</span> {{ room.state }}
         </p>
-        <p><i class="fa fa-map-marker-alt"></i> 40/13 Bùi Viện, Phạm Ngũ Lão, District 1, Hồ Chí Minh City</p>
-      </div>
-      <div class="col-md-4 order-md-0 d-flex justify-content-end align-items-center">
-        <button class="btn btn-primary">Reserve</button>
-      </div>
+        <p><i class="fa fa-map-marker-alt"></i> {{ room.state.name }}</p>  <!-- Tên trạng thái -->
+        <p>Price: ${{ room.price }}</p>  <!-- Giá phòng -->
+        <p>{{ room.description }}</p>  <!-- Mô tả phòng -->
     </div>
+    <div class="col-md-4 order-md-0 d-flex justify-content-end align-items-center">
+        <button class="btn btn-primary">Reserve</button>
+    </div>
+</div>
   
     <div class="row mt-4">
       <div class="col-md-8">
