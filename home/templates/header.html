@@ -59,8 +59,8 @@
                                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <p>User is logged in: {{ user.username }}</p>  
                                     <a class="dropdown-item" href="#">Profile</a>
-                                    <a class="dropdown-item" href="{% url 'login' %}">Logout</a>
-                                 </div>
+                                    <a class="dropdown-item" href="{% url 'login' %}">Logout</a> <!-- Đăng xuất -->
+                                </div>
                              </li>
                          {% endif %}
                      </ul>

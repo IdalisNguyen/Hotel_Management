@@ -10,7 +10,7 @@ def room_details_view(request, room_id):
 def index1(request):
     return render(request,'room_list.html')
 
-@login_required(login_url='/login/')  # Yêu cầu người dùng đăng nhập để đặt phòng
+@login_required  # Yêu cầu người dùng đăng nhập để đặt phòng
 def book_room(request):
     if request.method == 'POST':
         room_id = request.POST.get('room')  # Lấy ID của phòng từ form
