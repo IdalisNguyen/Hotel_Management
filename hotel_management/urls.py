@@ -23,8 +23,12 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
     path('',home.get_home),
     path('about/', include('about.urls')),
+=======
+    path('',home.get_home, name='home'),
+>>>>>>> 1ed03e8a03c92e1e989d204c06364c87dc29e9d4
     path('room', include('room.urls')),
     path('food', include('food.urls')),
     path('vehicle', include('vehicle.urls')),
