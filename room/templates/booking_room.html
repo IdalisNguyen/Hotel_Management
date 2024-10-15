@@ -3,25 +3,113 @@
 
 {% block main_content %}
 
-<h2>Book a Room</h2>
-<form method="POST">
-    {% csrf_token %}
-    
-    <label for="room">Room:</label>
-    <select name="room" id="room" required>
-        <!-- Hiển thị danh sách các phòng để người dùng chọn -->
-        {% for room in rooms %}
-            <option value="{{ room.id }}">{{ room.name }}</option>
-        {% endfor %}
-    </select>
+<div class="contact-wrap">
 
-    <label for="date_start">Start Date:</label>
-    <input type="datetime-local" name="date_start" id="date_start" required>
+        <div class="all">
 
-    <label for="date_end">End Date:</label>
-    <input type="datetime-local" name="date_end" id="date_end" required>
+                <div class="block-wrap">
 
-    <button type="submit">Book Room</button>
-</form>
+                    <div class="block-title">
+
+                        <div class="title">
+
+                            <h2>Liên hệ</h2>
+
+                        </div>
+
+                        <div class="divider"></div>
+
+                    </div>
+
+                    <div class="content-wrap">
+
+
+                    <div class="contact-us clearfix">
+
+                        
+            <div class="contact-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3892.501073735059!2d108.04231241430188!3d12.68068472462713!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31721d7f730198b5%3A0xf77ddb1d65370b0e!2zMWR1b25nIFBoYW4gQ2h1IFRyaW5oLCBUaOG6r25nIEzhu6NpLCBUaMOgbmggcGjhu5EgQnXDtG4gTWEgVGh14buZdCwgxJDhuq9rIEzhuq9rLCBWaWV0bmFt!5e0!3m2!1sen!2s!4v1567999496945!5m2!1sen!2s" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe></div>
+                    <div class="contact-form">
+
+                        <div role="form" class="wpcf7" id="" lang="en-US" dir="ltr">
+                <form action="{% url 'book_room' %}" method="POST" class="wpcf7-form" novalidate="novalidate">
+                {% csrf_token %}
+                </div>
+                <div class="half-width-wrap">
+                                        <div class="half input-control">
+                                            <span class="wpcf7-form-control-wrap text-587">
+                                                <input type="text" name="text-588" value="{{ user.username }}" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required input-form" aria-required="true" aria-invalid="false" placeholder="Tên" />
+                                            </span>
+                                        </div>
+                                        <div class="half input-control">
+                                            <span class="wpcf7-form-control-wrap text-587">
+                                                <label for="room">Room:</label>
+                                                <select name="room" id="room" required class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required input-form">
+                                                    <!-- Hiển thị danh sách các phòng để người dùng chọn -->
+                                                    {% for room in rooms %}
+                                                        <option value="{{ room.id }}">{{ room.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </span>
+                                        </div>          
+                                        <div class="half input-control">
+                                            <span class="wpcf7-form-control-wrap text-588">
+                                                <input type="text" name="text-588" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required input-form" aria-required="true" aria-invalid="false" placeholder="Tên" />
+                                            </span>
+                                        </div>                                    
+                                        
+                                        <div class="half input-control">
+                                            <span class="wpcf7-form-control-wrap text-587">
+                                                <label for="date_start">Start Date:</label>
+                                                <input type="datetime-local" name="date_start" id="date_start" required>
+                                            </span>
+                                        </div>
+
+                                        
+
+                                        <div class="half input-control">
+                                            <span class="wpcf7-form-control-wrap tel-61">
+                                                <input type="tel" name="tel-61" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-tel wpcf7-validates-as-required wpcf7-validates-as-tel input-form" aria-required="true" aria-invalid="false" placeholder="Số điện thoại" />
+                                            </span>
+                                        </div>
+                                        <div class="half input-control">
+                                            <label for="date_end">End Date:</label>
+                                            <input type="datetime-local" name="date_end" id="date_end" required>
+                                        </div>
+
+                                        <div class="half input-control">
+                                            <span class="wpcf7-form-control-wrap email-330">
+                                                <input type="email" name="email-330" value="{{ user.email }}" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-email input-form" aria-invalid="false" placeholder="Email" />
+                                            </span>
+                                        </div>
+                                        <div class="full input-control">
+                                            <span class="wpcf7-form-control-wrap textarea-20">
+                                                <textarea name="textarea-20" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea input-control" aria-invalid="false" placeholder="Lời nhắn"></textarea>
+                                            </span>
+                                        </div>
+                                        <div class="full action">
+                                            <button type="submit" class="wpcf7-form-control wpcf7-submit btn btn-readmore">Book Room</button>
+                                        </div>
+                                    </div><input type='hidden' class='wpcf7-pum' value='{"closepopup":false,"closedelay":0,"openpopup":false,"openpopup_id":0}' /><div class="wpcf7-response-output wpcf7-display-none"></div>
+            </form>
+                            
+                            </div>
+                            </div>    
+
+                        </div>
+
+                        </div>
+
+                </div>
+            </div>
+
+
+  
+
+
+
+  </div>
+
+
+
 
 {% endblock main_content %}
