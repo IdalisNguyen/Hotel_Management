@@ -11,7 +11,6 @@ def room_details_view(request, room_id):
     return render(request, 'room_details.html', {'room': room})  
 def index1(request):
     return render(request,'room_list.html')
-
 @login_required
 def book_room(request):
     if request.method == 'POST':
@@ -23,6 +22,7 @@ def book_room(request):
         email = request.POST.get('email-330')
         message = request.POST.get('textarea-20')
 
+        # Tạo bản ghi đặt phòng
         RoomBooking.objects.create(
             user=request.user,
             room=room,
@@ -33,8 +33,24 @@ def book_room(request):
             message=message
         )
 
-        messages.success(request, 'Phòng của bạn đã được đặt thành công!')
-        return redirect('home')  # Điều hướng về trang chủ sau khi đặt phòng thành công
+        # Thêm thông báo mới vào session
+        new_notification = f'Phòng {room.name} đã được đặt thành công từ {date_start} đến {date_end}!'
+        
+        # Kiểm tra danh sách thông báo hiện có trong session, nếu không có thì tạo mới
+        if 'notifications' not in request.session:
+            request.session['notifications'] = []
+
+        # Thêm thông báo mới vào danh sách và lưu lại vào session
+        notifications = request.session['notifications']
+        notifications.append(new_notification)
+        request.session['notifications'] = notifications
+
+        return redirect('home')  # Điều hướng về trang home
 
     rooms = Room.objects.all()
     return render(request, 'booking_room.html', {'rooms': rooms})
+
+@login_required
+def clear_notifications(request):
+    request.session['notifications'] = []  # Xóa tất cả thông báo
+    return redirect('home')  # Hoặc điều hướng đến trang mong muốn
