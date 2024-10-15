@@ -27,16 +27,10 @@
                              <a class="nav-link" href="index.html">Home</a>
                          </li>
                          <li class="nav-item">
-                             <a class="nav-link" href="about.html">About</a>
-                         </li>
-                         <li class="nav-item">
                              <a class="nav-link" href="{% url 'list_room' %}">Our room</a>
                          </li>
                          <li class="nav-item">
                              <a class="nav-link" href="gallery.html">Gallery</a>
-                         </li>
-                         <li class="nav-item">
-                             <a class="nav-link" href="blog.html">Blog</a>
                          </li>
                          <li class="nav-item">
                              <a class="nav-link" href="contact.html">Contact Us</a>
@@ -62,6 +56,67 @@
                                         <a class="dropdown-item" href="{% url 'login' %}">Logout</a> <!-- Đăng xuất -->
                                     </div>
                                 </li>
+                                <!-- Biểu tượng giỏ hàng -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link d-flex align-items-center" href="#" id="cartDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <div class="position-relative">
+                                            <i class="fas fa-shopping-cart" style="font-size: 24px;"></i>
+                                            <span class="position-absolute top-0 start-100 translate-middle bg-blue-500 text-white text-xs rounded-full px-1">
+                                                {{ cart.item_count }}
+                                            </span>
+                                        </div>
+                                        <i class="fas fa-caret-down ms-2"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right bg-gray-800 text-white p-4 rounded-lg" aria-labelledby="cartDropdown">
+                                        <h6 class="dropdown-header text-lg font-bold">Giỏ hàng</h6>
+                                        {% if cart.items %}
+                                            {% for item in cart.items %}
+                                            <div class="bg-gray-700 p-4 rounded-lg mb-4">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="d-flex">
+                                                        <img alt="{{ item.name }}" class="w-20 h-20 rounded-lg me-3" src="{{ item.image_url }}" />
+                                                        <div>
+                                                            <h2 class="text-lg font-bold">{{ item.name }}</h2>
+                                                            <p>Price: {{ item.price }} Đ</p>
+                                                            <p>Total Qty.: {{ item.quantity }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <button class="text-white">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="d-flex justify-content-between mt-4">
+                                                    <span>Duration</span>
+                                                    <span>Qty.</span>
+                                                    <span>Price</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between mt-2">
+                                                    <span>{{ item.start_date }} - {{ item.end_date }}</span>
+                                                    <span>{{ item.quantity }}</span>
+                                                    <span>{{ item.price }} Đ</span>
+                                                    <button class="text-white">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            <div class="d-flex justify-content-between mb-4">
+                                                <span>Convenience Fees</span>
+                                                <span>0 Đ</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-4">
+                                                <span>Total</span>
+                                                <span>{{ cart.total }} Đ</span>
+                                            </div>
+                                            <button class="bg-blue-500 text-white w-100 py-2 rounded-lg">
+                                                Check out <i class="fas fa-arrow-right"></i>
+                                            </button>
+                                        {% else %}
+                                            <a class="dropdown-item" href="#">Giỏ hàng trống</a>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                                
                                 <!-- Biểu tượng chuông thông báo -->
                                 {% if request.session.notifications %}
                                 <li class="nav-item dropdown">
