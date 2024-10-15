@@ -8,6 +8,7 @@ __pycache__/
 
 # Media files
 media/
+room_images/
 
 # Database files
 db.sqlite3

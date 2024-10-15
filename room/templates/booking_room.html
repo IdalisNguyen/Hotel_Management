@@ -1,0 +1,27 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block main_content %}
+
+<h2>Book a Room</h2>
+<form method="POST">
+    {% csrf_token %}
+    
+    <label for="room">Room:</label>
+    <select name="room" id="room" required>
+        <!-- Hiển thị danh sách các phòng để người dùng chọn -->
+        {% for room in rooms %}
+            <option value="{{ room.id }}">{{ room.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="date_start">Start Date:</label>
+    <input type="datetime-local" name="date_start" id="date_start" required>
+
+    <label for="date_end">End Date:</label>
+    <input type="datetime-local" name="date_end" id="date_end" required>
+
+    <button type="submit">Book Room</button>
+</form>
+
+{% endblock main_content %}

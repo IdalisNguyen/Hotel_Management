@@ -7,11 +7,19 @@ class RoomType(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class RoomState(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+
 class Room(models.Model):
     name = models.CharField(max_length=255)
-    type = models.IntegerField()  # 1 for available, 0 for booked
-    state = models.ForeignKey(RoomType, on_delete=models.CASCADE)
+    type = models.ForeignKey(RoomType, on_delete=models.CASCADE)
+    state = models.ForeignKey(RoomState, on_delete=models.CASCADE)
     price = models.IntegerField()
     description = models.TextField(default='No description available')  # Add default value
     image = models.ImageField(upload_to='room_images/', blank=True, null=True)  # Image field
