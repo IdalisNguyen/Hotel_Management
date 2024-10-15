@@ -22,3 +22,4 @@ def home(request):
         'user': request.user  # Truyền thông tin người dùng vào template
     }
     return render(request, 'content.html', context)
+
