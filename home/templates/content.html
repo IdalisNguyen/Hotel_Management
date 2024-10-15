@@ -41,7 +41,7 @@
                            <div class="row">
                               <div class="col-md-12">
                                  <span>Arrival</span>
-                                 <img class="date_cua" src="images/date.png">
+                                 <img class="date_cua" src="static/app/images/date.png">
                                  <input class="online_book" placeholder="dd/mm/yyyy" type="date" name="dd/mm/yyyy">
                               </div>
                               <div class="col-md-12">
@@ -50,7 +50,13 @@
                                  <input class="online_book" placeholder="dd/mm/yyyy" type="date" name="dd/mm/yyyy">
                               </div>
                               <div class="col-md-12">
-                                 <button class="book_btn">Book Now</button>
+                                 <button class="book_btn">
+                                    {% if user.is_authenticated %}
+                                        <a href="{% url 'book_room' %}">Book Now</a>
+                                    {% else %}
+                                        <a href="{% url 'login' %}?next={% url 'book_room' %}">Book Now</a>
+                                    {% endif %}
+                                </button>
                               </div>
                            </div>
                         </form>
@@ -82,7 +88,48 @@
       </div>
       <!-- end about -->
       <!-- our_room -->
-      <div  class="our_room">
+
+      <div class="our_room">
+         <div class="container">
+             <div class="row">
+                 <div class="col-md-12">
+                     <div class="titlepage">
+                         <h2>Our Room</h2>
+                         <p>Lorem Ipsum available, but the majority have suffered</p>
+                     </div>
+                 </div>
+             </div>
+             <div class="row">
+                 {% if rooms %}
+                     {% for room in rooms %}
+                     <div class="col-md-4 col-sm-6">
+                         <div id="serv_hover" class="room">
+                             <a href="{% url 'room_details' room.id %}">  <!-- Sử dụng URL cho chi tiết phòng -->
+                                 <div class="room_img">
+                                     <figure>
+                                         <img src="{{ room.image.url }}" alt="{{ room.name }}"/>
+                                     </figure>
+                                 </div>
+                                 <div class="bed_room">
+                                     <h3>{{ room.name }}</h3>
+                                     <p>{{ room.description }}</p>
+                                 </div>
+                             </a>
+                         </div>
+                     </div>
+                     {% endfor %}
+                 {% else %}
+                     <p>No rooms available.</p>
+                 {% endif %}
+             </div>
+         </div>
+     </div>
+     
+     
+
+
+
+      {% comment %} <div  class="our_room">
          <div class="container">
             <div class="row">
                <div class="col-md-12">
@@ -161,7 +208,7 @@
                </div>
             </div>
          </div>
-      </div>
+      </div> {% endcomment %}
       <!-- end our_room -->
       <!-- gallery -->
       <div  class="gallery">

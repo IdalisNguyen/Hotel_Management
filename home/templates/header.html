@@ -22,30 +22,81 @@
                    <span class="navbar-toggler-icon"></span>
                    </button>
                    <div class="collapse navbar-collapse" id="navbarsExample04">
-                      <ul class="navbar-nav mr-auto">
+                     <ul class="navbar-nav mr-auto">
                          <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Home</a>
+                             <a class="nav-link" href="index.html">Home</a>
                          </li>
                          <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
+                             <a class="nav-link" href="about.html">About</a>
                          </li>
                          <li class="nav-item">
-                            <a class="nav-link" href="{% url "list_room" %}">Our room</a>
+                             <a class="nav-link" href="{% url 'list_room' %}">Our room</a>
                          </li>
                          <li class="nav-item">
-                            <a class="nav-link" href="gallery.html">Gallery</a>
+                             <a class="nav-link" href="gallery.html">Gallery</a>
                          </li>
                          <li class="nav-item">
-                            <a class="nav-link" href="blog.html">Blog</a>
+                             <a class="nav-link" href="blog.html">Blog</a>
                          </li>
                          <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact Us</a>
+                             <a class="nav-link" href="contact.html">Contact Us</a>
                          </li>
+                 
+                         <!-- Hiển thị nút "Login" nếu người dùng chưa đăng nhập -->
+                         {% if not user.is_authenticated %}
                          <li class="nav-item">
-                           <a class="nav-link" href="{% url "login" %}">Login</a>
-                        </li>
-                      </ul>
-                   </div>
+                             <a class="nav-link" href="{% url 'login' %}">
+                                 <i class="fas fa-sign-in-alt" style="font-size: 24px;"></i> <!-- Icon đăng nhập -->
+                                 Login
+                             </a>
+                         </li>
+                            {% else %}
+                                <!-- Hiển thị icon người dùng nếu đã đăng nhập -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-user-circle" style="font-size: 24px;"></i> <!-- Icon người dùng -->
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <p>User is logged in: {{ user.username }}</p>  
+                                        <a class="dropdown-item" href="#">Profile</a>
+                                        <a class="dropdown-item" href="{% url 'login' %}">Logout</a> <!-- Đăng xuất -->
+                                    </div>
+                                </li>
+                                <!-- Biểu tượng chuông thông báo -->
+                                {% if request.session.notifications %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-bell" style="font-size: 24px;"></i>
+                                        <span class="badge badge-danger">{{ request.session.notifications|length }}</span> <!-- Số lượng thông báo -->
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                                        <h6 class="dropdown-header">Thông báo</h6>
+                                        {% for notification in request.session.notifications %}
+                                            <a class="dropdown-item" href="#">{{ notification }}</a>
+                                            {% if not forloop.last %}
+                                                <div class="dropdown-divider"></div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{% url 'clear_notifications' %}">Xóa tất cả thông báo</a>
+                                    </div>
+                                </li>
+                                {% else %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-bell" style="font-size: 24px;"></i>
+                                        <span class="badge badge-secondary">0</span> <!-- Không có thông báo -->
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                                        <h6 class="dropdown-header">Không có thông báo mới</h6>
+                                    </div>
+                                </li>
+                                {% endif %}
+                            
+                            
+                            {% endif %}
+                     </ul>
+                 </div>
                 </nav>
              </div>
           </div>
