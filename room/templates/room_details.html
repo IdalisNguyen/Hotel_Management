@@ -99,7 +99,11 @@
               <div class="mb-3">
                   <span class="badge bg-warning text-dark">còn 5 Phòng!</span>
               </div>
-              <button class="btn btn-primary w-100">Thêm vào giỏ hàng</button>
+              <form method="POST" action="{% url 'add_to_cart' room.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary w-100" >Thêm vào giỏ hàng</button>
+              </form>
+
           </div>
       </div>
   </div>
@@ -107,6 +111,32 @@
   </div>
   <script>
     const roomPrice = {{ room.price }};
+
+    function addToCart(roomId) {
+      fetch('/add-to-cart/', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}' // CSRF Token cho Django
+          },
+          body: JSON.stringify({ 'room_id': roomId })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              // Cập nhật icon giỏ hàng
+              updateCartIcon(data.cart_count);
+              alert('Phòng đã được thêm vào giỏ hàng!');
+          } else {
+              alert('Có lỗi xảy ra, vui lòng thử lại!');
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+  }
+
+
 
     function updateSubtotal() {
         
