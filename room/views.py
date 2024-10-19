@@ -9,8 +9,12 @@ from django.contrib import messages
 def room_details_view(request, room_id):
     room = get_object_or_404(Room, id=room_id)  # Lấy phòng theo id
     return render(request, 'room_details.html', {'room': room})  
+
 def index1(request):
-    return render(request,'room_list.html')
+    cart = request.session.get('cart', {})
+    rooms_in_cart = Room.objects.filter(id__in=cart.keys())
+    total_cost = sum(room.price * cart[str(room.id)] for room in rooms_in_cart)
+    return render(request, 'room_list.html', {'rooms': rooms_in_cart, 'total_cost': total_cost})
 @login_required
 def book_room(request):
     if request.method == 'POST':
@@ -60,4 +64,19 @@ def add_to_cart(request, room_id):
     cart[room_id] = cart.get(room_id, 0) + 1
     request.session['cart'] = cart
     request.session.modified = True  # Đảm bảo rằng session được lưu lại
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+def remove_from_cart(request, room_id):
+    # Lấy giỏ hàng từ session
+    cart = request.session.get('cart', {})
+
+    # Xóa phòng khỏi giỏ hàng nếu tồn tại
+    if str(room_id) in cart:
+        del cart[str(room_id)]
+
+    # Cập nhật lại session
+    request.session['cart'] = cart
+    request.session.modified = True
+
+    # Redirect về trang hiện tại để cập nhật giỏ hàng
     return redirect(request.META.get('HTTP_REFERER', '/'))

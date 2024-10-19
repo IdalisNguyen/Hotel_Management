@@ -10,6 +10,7 @@ def cart_context(request):
         try:
             room = Room.objects.get(id=room_id)
             items.append({
+                'id': room.id,  # Thêm 'id' để xác định phòng khi xóa
                 'name': room.name,
                 'image_url': room.image.url,
                 'price': room.price,
