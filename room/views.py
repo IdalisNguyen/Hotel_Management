@@ -54,3 +54,10 @@ def book_room(request):
 def clear_notifications(request):
     request.session['notifications'] = []  # Xóa tất cả thông báo
     return redirect('home')  # Hoặc điều hướng đến trang mong muốn
+
+def add_to_cart(request, room_id):
+    cart = request.session.get('cart', {})
+    cart[room_id] = cart.get(room_id, 0) + 1
+    request.session['cart'] = cart
+    request.session.modified = True  # Đảm bảo rằng session được lưu lại
+    return redirect(request.META.get('HTTP_REFERER', '/'))
