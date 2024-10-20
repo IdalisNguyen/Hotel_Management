@@ -9,6 +9,7 @@ urlpatterns = [
     path('/booking', views.book_room, name='book_room'),  # Đường dẫn đến trang booking
     path('clear_notifications/', clear_notifications, name='clear_notifications'),
     path('add-to-cart/<int:room_id>/', views.add_to_cart, name='add_to_cart'),
+    path('remove-from-cart/<int:room_id>/', views.remove_from_cart, name='remove_from_cart'),
 
 
 ]

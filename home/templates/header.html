@@ -62,13 +62,10 @@
                         <div class="position-relative">
                           <i class="fas fa-shopping-cart" style="font-size: 24px;"></i>
                           <!-- Hiển thị số lượng sản phẩm -->
-                          <span id="cart-item-count" class="badge badge-danger">
-                            {{ cart.item_count|default:0 }}
-                          </span>
+                          <span class="badge position-absolute top-0 start-100 translate-middle bg-danger text-white rounded-circle">{{ cart.item_count|default:0 }}</span>
                         </div>
                         <i class="fas fa-caret-down ms-2"></i>
                       </a>
-                      <!-- Dropdown Giỏ Hàng -->
                       <div class="dropdown-menu dropdown-menu-end p-4 cart-dropdown-menu" aria-labelledby="cartDropdown" id="cart-items">
                         <h6 class="dropdown-header">Giỏ hàng</h6>
                         <div id="cart-content">
@@ -81,6 +78,15 @@
                                     <h6>{{ item.name }}</h6>
                                     <small>{{ item.price }} Đ x {{ item.quantity }}</small>
                                   </div>
+                                </div>
+                                <div>
+                                  <!-- Nút Xóa -->
+                                  <form method="POST" action="{% url 'remove_from_cart' item.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link p-0 text-danger">
+                                      <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                  </form>
                                 </div>
                               </div>
                             {% endfor %}
