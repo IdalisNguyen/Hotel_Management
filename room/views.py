@@ -9,12 +9,30 @@ from django.contrib import messages
 def room_details_view(request, room_id):
     room = get_object_or_404(Room, id=room_id)  # Lấy phòng theo id
     return render(request, 'room_details.html', {'room': room})  
-
-def index1(request):
+def list_room(request):
     cart = request.session.get('cart', {})
-    rooms_in_cart = Room.objects.filter(id__in=cart.keys())
-    total_cost = sum(room.price * cart[str(room.id)] for room in rooms_in_cart)
-    return render(request, 'room_list.html', {'rooms': rooms_in_cart, 'total_cost': total_cost})
+    rooms_in_cart = []
+    total_cost = 0
+
+    for room_id, details in cart.items():
+        try:
+            room = Room.objects.get(id=room_id)
+            room.checkin_date = details.get('checkin')
+            room.checkout_date = details.get('checkout')
+            room.guests = details.get('guests')
+            room.total_price = room.price * details.get('quantity', 1)
+            rooms_in_cart.append(room)
+            total_cost += room.total_price
+        except Room.DoesNotExist:
+            pass
+
+    context = {
+        'rooms': Room.objects.all(),  # Danh sách tất cả các phòng (có thể lọc thêm nếu cần)
+        'cart_rooms': rooms_in_cart,  # Danh sách các phòng trong giỏ hàng
+        'total_cost': total_cost,  # Tổng giá trong giỏ hàng
+    }
+
+    return render(request, 'room_list.html', context)
 @login_required
 def book_room(request):
     if request.method == 'POST':
@@ -58,14 +76,25 @@ def book_room(request):
 def clear_notifications(request):
     request.session['notifications'] = []  # Xóa tất cả thông báo
     return redirect('home')  # Hoặc điều hướng đến trang mong muốn
-
 def add_to_cart(request, room_id):
     cart = request.session.get('cart', {})
-    cart[room_id] = cart.get(room_id, 0) + 1
-    request.session['cart'] = cart
-    request.session.modified = True  # Đảm bảo rằng session được lưu lại
-    return redirect(request.META.get('HTTP_REFERER', '/'))
 
+    # Kiểm tra nếu phòng đã có trong giỏ hàng, thì tăng số lượng lên
+    if room_id in cart:
+        cart[room_id]['quantity'] += 1
+    else:
+        cart[room_id] = {
+            'quantity': 1,
+            'checkin': request.POST.get('checkin'),
+            'checkout': request.POST.get('checkout'),
+            'guests': request.POST.get('guests')
+        }
+
+    # Cập nhật giỏ hàng trong session
+    request.session['cart'] = cart
+    request.session.modified = True
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 def remove_from_cart(request, room_id):
     # Lấy giỏ hàng từ session
     cart = request.session.get('cart', {})

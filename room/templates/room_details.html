@@ -52,7 +52,8 @@
           <div class="card-body">
               <h6 class="card-title text-primary fw-bold">VỊ TRÍ KHÁCH SẠN</h6>
               <p class="card-text">TP Buôn Ma Thuột, Vietnam</p>
-              
+              <form method="POST" action="{% url 'add_to_cart' room.id %}">
+
               <!-- Trường Ngày Check In -->
               <div class="mb-3">
                   <label class="form-label">Check In</label>
@@ -99,7 +100,6 @@
               <div class="mb-3">
                   <span class="badge bg-warning text-dark">còn 5 Phòng!</span>
               </div>
-              <form method="POST" action="{% url 'add_to_cart' room.id %}">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary w-100" >Thêm vào giỏ hàng</button>
               </form>
@@ -113,18 +113,25 @@
     const roomPrice = {{ room.price }};
 
     function addToCart(roomId) {
-      fetch('/add-to-cart/', {
+      const checkinDate = document.getElementById('checkin-date').value;
+      const checkoutDate = document.getElementById('checkout-date').value;
+      const guests = document.getElementById('guests').value;
+  
+      fetch(`/add-to-cart/${roomId}/`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
-              'X-CSRFToken': '{{ csrf_token }}' // CSRF Token cho Django
+              'X-CSRFToken': '{{ csrf_token }}'
           },
-          body: JSON.stringify({ 'room_id': roomId })
+          body: JSON.stringify({
+              'checkin': checkinDate,
+              'checkout': checkoutDate,
+              'guests': guests
+          })
       })
       .then(response => response.json())
       .then(data => {
           if (data.success) {
-              // Cập nhật icon giỏ hàng
               updateCartIcon(data.cart_count);
               alert('Phòng đã được thêm vào giỏ hàng!');
           } else {
@@ -135,7 +142,6 @@
           console.error('Error:', error);
       });
   }
-
 
 
     function updateSubtotal() {

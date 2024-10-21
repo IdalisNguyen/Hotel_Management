@@ -50,49 +50,51 @@
                       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <p>User is logged in: {{ user.username }}</p>
                         <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="#">Orders</a>
                         <a class="dropdown-item" href="{% url 'login' %}">Logout</a> <!-- Đăng xuất -->
                       </div>
                     </li>
 
 
-
                     <!-- Biểu tượng giỏ hàng -->
                     <li class="nav-item dropdown">
-                      <a class="nav-link d-flex align-items-center" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <a class="nav-link d-flex align-items-center" href="{% url 'list_room' %}" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <div class="position-relative">
                           <i class="fas fa-shopping-cart" style="font-size: 24px;"></i>
-                          <!-- Hiển thị số lượng sản phẩm -->
-                          <span class="badge position-absolute top-0 start-100 translate-middle bg-danger text-white rounded-circle">{{ cart.item_count|default:0 }}</span>
+                          <!-- Hiển thị số lượng phòng trong badge -->
+                          <span class="badge badge-danger">{{ cart.item_count|default:0 }}</span>
                         </div>
                         <i class="fas fa-caret-down ms-2"></i>
                       </a>
                       <div class="dropdown-menu dropdown-menu-end p-4 cart-dropdown-menu" aria-labelledby="cartDropdown" id="cart-items">
                         <h6 class="dropdown-header">Giỏ hàng</h6>
                         <div id="cart-content">
-                          {% if cart.items %}
-                            {% for item in cart.items %}
-                              <div class="d-flex justify-content-between mb-3">
-                                <div class="d-flex align-items-center">
-                                  <img src="{{ item.image_url }}" alt="{{ item.name }}" class="rounded" width="60" height="60" />
-                                  <div class="ms-3">
-                                    <h6>{{ item.name }}</h6>
-                                    <small>{{ item.price }} Đ x {{ item.quantity }}</small>
+                          {% if cart.cart_items %}
+                            {% for room in cart.cart_items %}
+                              <a href="{% url 'list_room' %}" class="text-decoration-none text-dark"> <!-- Thẻ a bao quanh toàn bộ phòng -->
+                                <div class="d-flex justify-content-between mb-3">
+                                  <div class="d-flex align-items-center">
+                                    <img src="{{ room.image_url }}" alt="{{ room.name }}" class="rounded" width="60" height="60" />
+                                    <div class="ms-3">
+                                      <h6>{{ room.name }}</h6>
+                                      <small>{{ room.price }} Đ x {{ room.quantity }}</small>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <!-- Nút Xóa -->
+                                    <form method="POST" action="{% url 'remove_from_cart' room.id %}">
+                                      {% csrf_token %}
+                                      <button type="submit" class="btn btn-link p-0 text-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                      </button>
+                                    </form>
                                   </div>
                                 </div>
-                                <div>
-                                  <!-- Nút Xóa -->
-                                  <form method="POST" action="{% url 'remove_from_cart' item.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-link p-0 text-danger">
-                                      <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                  </form>
-                                </div>
-                              </div>
+                              </a> <!-- Kết thúc thẻ a -->
                             {% endfor %}
                             <div class="d-flex justify-content-between mt-4">
                               <span>Tổng cộng:</span>
-                              <strong>{{ cart.total }} Đ</strong>
+                              <strong>{{ cart.total_price }} Đ</strong>
                             </div>
                             <button class="btn btn-primary w-100 mt-3">Thanh toán</button>
                           {% else %}
