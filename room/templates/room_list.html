@@ -8,23 +8,20 @@
 <!-- Thông tin về các phòng trong giỏ hàng -->
 <div class="container mt-6">
     <div class="row">
+        <!-- Phần hiển thị các phòng trong giỏ hàng -->
         <div class="col-lg-8" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 20px; background-color: white;">
             <h2 class="text-2xl font-semibold mb-4">Tóm tắt về phòng &amp; giá cả</h2>
             <h3 class="text-lg font-semibold mb-2">GIỎ HÀNG CỦA BẠN</h3>
 
             <!-- Vòng lặp qua các phòng để hiển thị thông tin -->
-            {% if cart_rooms %}
-                {% for room in cart_rooms %}
+            {% if cart.cart_items %}
+                {% for room in cart.cart_items %}
                 <div class="border-bottom pb-4 mb-4">
                     <div class="d-flex align-items-start mb-4">
-                        <img src="{{ room.image.url }}" alt="Image of {{ room.name }}" class="rounded-lg me-4" width="100" height="100">
+                        <img src="{{ room.image.url }}" alt="{{ room.name }}" class="rounded-lg me-4" width="100" height="100">
                         <div class="flex-grow-1">
                             <h4 class="text-xl font-semibold">{{ room.name }}</h4>
-                            <p class="text-gray-600"><i class="fas fa-map-marker-alt"></i> {{ room.state.name }}</p>
-                            <div class="d-flex align-items-center mt-2">
-                                <span class="badge bg-success text-white me-2"><i class="fas fa-check-circle"></i> Wi-Fi</span>
-                                <span class="badge bg-secondary text-white"><i class="fas fa-check-circle"></i> Refrigerator</span>
-                            </div>
+                            <p class="text-gray-600"><i class="fas fa-map-marker-alt"></i> {{ room.state }}</p>
                         </div>
                         <form method="POST" action="{% url 'remove_from_cart' room.id %}">
                             {% csrf_token %}
@@ -35,11 +32,11 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="text-sm text-gray-600">CHECK IN</p>
-                                <p class="font-semibold">{{ room.checkin_date|default_if_none:"Not set" }}</p>
+                                <p class="font-semibold">{{ room.checkin }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-600">CHECK OUT</p>
-                                <p class="font-semibold">{{ room.checkout_date|default_if_none:"Not set" }}</p>
+                                <p class="font-semibold">{{ room.checkout }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-600">OCCUPANCY</p>
@@ -49,12 +46,11 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-lg font-semibold">{{ room.price }} Đ + <span class="text-primary">0 Đ Extra Services</span></p>
+                            <p class="text-lg font-semibold">{{ room.price }} Đ x {{ room.quantity }}</p>
                             <p class="text-sm text-gray-600">Total rooms price (Incl. all taxes)</p>
                         </div>
                         <div class="bg-light p-4 rounded-lg">
-                            <p class="text-lg font-semibold">{{ room.total_price }} Đ</p>
-                            <p class="text-sm text-gray-600">Total price for {{ room.nights|default_if_none:1 }} Night(s) stay (Incl. all taxes)</p>
+                            <p class="text-lg font-semibold">{{ room.total }} Đ</p>
                         </div>
                     </div>
                 </div>
@@ -62,7 +58,7 @@
             {% else %}
                 <p>Giỏ hàng của bạn hiện đang trống.</p>
             {% endif %}
-            <button class="btn btn-primary">XÁC NHẬN THANH TOÁN </button>
+            <button class="btn btn-primary">XÁC NHẬN THANH TOÁN</button>
         </div>
 
         <!-- Tóm tắt chi phí tổng cộng ở bên phải -->
@@ -70,7 +66,7 @@
             <div class="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
                 <div class="mb-4">
                     <p class="text-gray-600 font-medium">Total rooms cost (tax incl)</p>
-                    <p class="text-lg font-semibold text-gray-800">{{ total_cost }} Đ</p>
+                    <p class="text-lg font-semibold text-gray-800">{{ cart.total_price }} Đ</p>
                 </div>
                 <div class="mb-4">
                     <p class="text-gray-600 font-medium">Total tax</p>
@@ -78,38 +74,11 @@
                 </div>
                 <div class="mb-4">
                     <p class="text-gray-600 font-medium">Final Total</p>
-                    <p class="text-2xl font-semibold text-primary">{{ total_cost }} Đ</p>
-                </div>
-                <div>
-                    <p class="text-gray-600 mb-2">Have a promo code?</p>
-                    <div class="d-flex">
-                        <input type="text" class="form-control rounded-start" placeholder="Enter code" style="border: 1px solid #ccc;">
-                        <button class="btn btn-primary rounded-end">Apply</button>
-                    </div>
+                    <p class="text-2xl font-semibold text-primary">{{ cart.total_price }} Đ</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-{% comment %} 
-<h3>Danh sách phòng</h3>
-<div class="row">
-    {% for room in rooms %}
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <img src="{{ room.image.url }}" class="card-img-top" alt="{{ room.name }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ room.name }}</h5>
-                    <p class="card-text">{{ room.description }}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span>{{ room.price }} Đ</span>
-                        <a href="{% url 'add_to_cart' room.id %}" class="btn btn-primary">Thêm vào giỏ hàng</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-</div> {% endcomment %}
 
 {% endblock main_content %}

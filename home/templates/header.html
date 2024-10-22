@@ -55,7 +55,6 @@
                       </div>
                     </li>
 
-
                     <!-- Biểu tượng giỏ hàng -->
                     <li class="nav-item dropdown">
                       <a class="nav-link d-flex align-items-center" href="{% url 'list_room' %}" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -71,17 +70,16 @@
                         <div id="cart-content">
                           {% if cart.cart_items %}
                             {% for room in cart.cart_items %}
-                              <a href="{% url 'list_room' %}" class="text-decoration-none text-dark"> <!-- Thẻ a bao quanh toàn bộ phòng -->
+                              <a href="{% url 'list_room' %}" class="text-decoration-none text-dark">
                                 <div class="d-flex justify-content-between mb-3">
                                   <div class="d-flex align-items-center">
-                                    <img src="{{ room.image_url }}" alt="{{ room.name }}" class="rounded" width="60" height="60" />
+                                    <img src="{{ room.image.url }}" alt="{{ room.name }}" class="rounded" width="60" height="60" />
                                     <div class="ms-3">
                                       <h6>{{ room.name }}</h6>
                                       <small>{{ room.price }} Đ x {{ room.quantity }}</small>
                                     </div>
                                   </div>
                                   <div>
-                                    <!-- Nút Xóa -->
                                     <form method="POST" action="{% url 'remove_from_cart' room.id %}">
                                       {% csrf_token %}
                                       <button type="submit" class="btn btn-link p-0 text-danger">
@@ -90,11 +88,11 @@
                                     </form>
                                   </div>
                                 </div>
-                              </a> <!-- Kết thúc thẻ a -->
+                              </a>
                             {% endfor %}
                             <div class="d-flex justify-content-between mt-4">
                               <span>Tổng cộng:</span>
-                              <strong>{{ cart.total_price }} Đ</strong>
+                              <strong id="cart-total-price">{{ cart.total_price }} Đ</strong>
                             </div>
                             <button class="btn btn-primary w-100 mt-3">Thanh toán</button>
                           {% else %}
@@ -103,8 +101,7 @@
                         </div>
                       </div>
                     </li>
-
-
+                    
 
                     <!-- Biểu tượng chuông thông báo -->
                     {% if request.session.notifications %}

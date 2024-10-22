@@ -117,6 +117,7 @@
       const checkoutDate = document.getElementById('checkout-date').value;
       const guests = document.getElementById('guests').value;
   
+      // Tạo request AJAX
       fetch(`/add-to-cart/${roomId}/`, {
           method: 'POST',
           headers: {
@@ -132,29 +133,44 @@
       .then(response => response.json())
       .then(data => {
           if (data.success) {
-              updateCartIcon(data.cart_count);
+              // Cập nhật giỏ hàng trên header mà không cần reload trang
+              updateCartIcon(data.cart_count, data.total_price);
               alert('Phòng đã được thêm vào giỏ hàng!');
           } else {
-              alert('Có lỗi xảy ra, vui lòng thử lại!');
+              alert('Có lỗi xảy ra khi thêm vào giỏ hàng. Vui lòng thử lại!');
           }
       })
       .catch(error => {
-          console.error('Error:', error);
+          console.error('Lỗi trong quá trình xử lý yêu cầu:', error);
+          alert('Đã xảy ra lỗi, vui lòng kiểm tra kết nối và thử lại.');
       });
   }
-
+  
+  function updateCartIcon(cartCount, totalPrice) {
+      // Cập nhật số lượng trên biểu tượng giỏ hàng
+      const cartBadge = document.querySelector('.badge-danger');
+      if (cartBadge) {
+          cartBadge.textContent = cartCount;
+      }
+  
+      // Cập nhật tổng giá trong header (nếu có)
+      const cartTotalPriceElement = document.getElementById('cart-total-price');
+      if (cartTotalPriceElement) {
+          cartTotalPriceElement.textContent = totalPrice + " Đ";
+      }
+  }
 
     function updateSubtotal() {
-        
         const guests = document.getElementById('guests').value;
-        const extraServices = guests * 100;
+        const extraServices = guests * 100;  // Tính giá dịch vụ thêm theo số khách
         const subtotal = roomPrice + extraServices;
 
-
+        // Cập nhật giá dịch vụ và tổng tiền hiển thị
         document.getElementById('extra-services').textContent = extraServices + " Đ";
         document.getElementById('subtotal').textContent = subtotal + " Đ";
     }
 </script>
+
   
 <div class="col-md-4 shadow-sm p-3 mb-5 bg-white rounded">
   <h5 class="text-center mb-4 fw-bold">Dịch vụ</h5>

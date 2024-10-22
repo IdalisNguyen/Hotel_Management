@@ -1,39 +1,48 @@
-from .models import Room
+from room.models import Room, CartItem
 
 def cart_context(request):
-    cart = request.session.get('cart', {})
     cart_items = []
     total_price = 0
-    item_count = 0  # Biến để đếm tổng số lượng phòng trong giỏ hàng
+    item_count = 0
 
-    for room_id, details in cart.items():
-        try:
-            room = Room.objects.get(id=room_id)
-            # Nếu 'details' là int, sử dụng giá trị này như số lượng
-            if isinstance(details, int):
-                quantity = details
-            else:
-                quantity = details.get('quantity', 1)  # Mặc định là 1 nếu không có 'quantity'
-
-            item_total = room.price * quantity
-            total_price += item_total
-            item_count += quantity  # Cộng dồn số lượng phòng vào biến item_count
-
+    if request.user.is_authenticated:
+        # Lấy giỏ hàng từ cơ sở dữ liệu nếu người dùng đã đăng nhập
+        cart_items_db = CartItem.objects.filter(user=request.user)
+        for item in cart_items_db:
+            total_price += item.room.price * item.quantity
+            item_count += item.quantity
             cart_items.append({
-                'id': room.id,
-                'name': room.name,
-                'image_url': room.image.url,
-                'price': room.price,
-                'quantity': quantity,
-                'total': item_total
+                'id': item.room.id,
+                'name': item.room.name,
+                'image_url': item.room.image.url if item.room.image else '',
+                'price': item.room.price,
+                'quantity': item.quantity,
+                'total': item.room.price * item.quantity,
             })
-        except Room.DoesNotExist:
-            pass
+    else:
+        # Lấy giỏ hàng từ session nếu người dùng chưa đăng nhập
+        cart = request.session.get('cart', {})
+        for room_id, details in cart.items():
+            try:
+                room = Room.objects.get(id=room_id)
+                quantity = details.get('quantity', 1)
+                total_price += room.price * quantity
+                item_count += quantity
+                cart_items.append({
+                    'id': room.id,
+                    'name': room.name,
+                    'image_url': room.image.url if room.image else '',
+                    'price': room.price,
+                    'quantity': quantity,
+                    'total': room.price * quantity,
+                })
+            except Room.DoesNotExist:
+                continue
 
     return {
         'cart': {
             'cart_items': cart_items,
             'total_price': total_price,
-            'item_count': item_count  # Tổng số lượng phòng trong giỏ hàng
+            'item_count': item_count
         }
     }

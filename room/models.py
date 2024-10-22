@@ -48,3 +48,14 @@ class RoomBooking(models.Model):
 
     def __str__(self):
         return f"Booking by {self.user} for room {self.room} from {self.date_start} to {self.date_end}"
+    
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    checkin = models.DateField()
+    checkout = models.DateField()
+    guests = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.room.name} - {self.quantity}"
