@@ -51,11 +51,21 @@ class RoomBooking(models.Model):
     
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey('Room', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     checkin = models.DateField()
     checkout = models.DateField()
     guests = models.PositiveIntegerField(default=1)
+    subtotal = models.IntegerField(default=0)  # Thêm trường subtotal để lưu tổng giá cho item này
+
+    def total_booking(self):
+        # Tính subtotal dựa trên số lượng khách, số lượng phòng, và giá phòng
+        return self.room.price * self.quantity * self.guests
+
+    def save(self, *args, **kwargs):
+        # Tự động tính subtotal khi lưu CartItem
+        self.subtotal = self.total_booking()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user.username} - {self.room.name} - {self.quantity}"

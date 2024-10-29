@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 from room.models import Room, RoomBooking,CartItem
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
-
+from datetime import timedelta
+import datetime
 
 # Create your views here.
 def room_details_view(request, room_id):
@@ -11,50 +12,92 @@ def room_details_view(request, room_id):
     return render(request, 'room_details.html', {'room': room})  
 
 def list_room(request):
+    cart_items = []
+    total_price = 0
+    item_count = 0
+
     if request.user.is_authenticated:
-        cart_items = CartItem.objects.filter(user=request.user)
-        rooms_in_cart = []
-        total_cost = 0
-
-        for item in cart_items:
+        # Lấy giỏ hàng từ cơ sở dữ liệu nếu người dùng đã đăng nhập
+        cart_items_db = CartItem.objects.filter(user=request.user)
+        for item in cart_items_db:
             room = item.room
-            room.checkin_date = item.checkin
-            room.checkout_date = item.checkout
-            room.guests = item.guests
-            room.quantity = item.quantity
-            room.total_price = room.price * item.quantity
-            rooms_in_cart.append(room)
-            total_cost += room.total_price
-    else:
-        cart = request.session.get('cart', {})
-        rooms_in_cart = []
-        total_cost = 0
+            
+            # Tính số ngày giữa checkin và checkout
+            num_days = (item.checkout - item.checkin).days
+            if num_days < 1:  # Trường hợp checkout < checkin, mặc định ít nhất 1 ngày
+                num_days = 1
 
+            # Tính tổng giá cho item này với số ngày
+            item_total_price = item.subtotal * num_days
+            total_price += item_total_price
+            item_count += item.quantity
+            
+            # Thêm thông tin vào cart_items
+            cart_items.append({
+                'id': room.id,
+                'name': room.name,
+                'image_url': room.image.url if room.image else '',
+                'price': room.price,
+                'quantity': item.quantity,
+                'guests': item.guests,
+                'checkin_date': item.checkin,
+                'checkout_date': item.checkout,
+                'num_days': num_days,  # Số ngày lưu trú
+                'total': item_total_price,  # Tổng giá với số ngày đã tính
+            })
+    else:
+        # Lấy giỏ hàng từ session nếu người dùng chưa đăng nhập
+        cart = request.session.get('cart', {})
         for room_id, details in cart.items():
             try:
                 room = Room.objects.get(id=room_id)
-                room.checkin_date = details.get('checkin')
-                room.checkout_date = details.get('checkout')
-                room.guests = details.get('guests')
-                room.quantity = details.get('quantity', 1)
-                room.total_price = room.price * room.quantity
-                rooms_in_cart.append(room)
-                total_cost += room.total_price
+                quantity = details.get('quantity', 1)
+                guests = details.get('guests', 1)
+                checkin_date = details.get('checkin')
+                checkout_date = details.get('checkout')
+                
+                # Tính số ngày giữa checkin và checkout
+                if checkin_date and checkout_date:
+                    checkin_date = datetime.strptime(checkin_date, '%Y-%m-%d').date()
+                    checkout_date = datetime.strptime(checkout_date, '%Y-%m-%d').date()
+                    num_days = (checkout_date - checkin_date).days
+                    if num_days < 1:
+                        num_days = 1
+                else:
+                    num_days = 1  # Nếu thiếu ngày thì mặc định là 1 ngày
+
+                # Tính tổng giá cho item này với số ngày
+                item_total_price = room.price * quantity * guests * num_days
+                total_price += item_total_price
+                item_count += quantity
+                
+                # Thêm thông tin vào cart_items
+                cart_items.append({
+                    'id': room.id,
+                    'name': room.name,
+                    'image_url': room.image.url if room.image else '',
+                    'price': room.price,
+                    'quantity': quantity,
+                    'guests': guests,
+                    'checkin_date': checkin_date,
+                    'checkout_date': checkout_date,
+                    'num_days': num_days,  # Số ngày lưu trú
+                    'total': item_total_price,  # Tổng giá với số ngày đã tính
+                })
             except Room.DoesNotExist:
-                pass
+                continue
 
     context = {
-        'cart_rooms': rooms_in_cart,
-        'total_cost': total_cost,
+        'cart_rooms': cart_items,
+        'total_cost': total_price,
         'cart': {
-            'cart_items': rooms_in_cart,
-            'total_price': total_cost,
-            'item_count': len(rooms_in_cart),
+            'cart_items': cart_items,
+            'total_price': total_price,
+            'item_count': item_count,
         }
     }
 
     return render(request, 'room_list.html', context)
-
 @login_required
 def book_room(request):
     if request.method == 'POST':
@@ -96,6 +139,7 @@ def clear_notifications(request):
     request.session['notifications'] = []  # Xóa tất cả thông báo
     return redirect('home')  # Hoặc điều hướng đến trang mong muốn
 
+
 def add_to_cart(request, room_id):
     room = get_object_or_404(Room, id=room_id)
 
@@ -108,12 +152,16 @@ def add_to_cart(request, room_id):
                 'quantity': 1,
                 'checkin': request.POST.get('checkin'),
                 'checkout': request.POST.get('checkout'),
-                'guests': request.POST.get('guests')
+                'guests': int(request.POST.get('guests', 1))
             }
         )
         if not created:
             cart_item.quantity += 1
             cart_item.save()
+
+        # Tính subtotal cho item này
+        cart_item.subtotal = cart_item.room.price * cart_item.quantity * cart_item.guests
+        cart_item.save()
 
     else:
         # Nếu người dùng chưa đăng nhập, lưu vào session
@@ -127,20 +175,22 @@ def add_to_cart(request, room_id):
                 'quantity': 1,
                 'checkin': request.POST.get('checkin'),
                 'checkout': request.POST.get('checkout'),
-                'guests': request.POST.get('guests')
+                'guests': int(request.POST.get('guests', 1))
             }
 
+        # Cập nhật session
         request.session['cart'] = cart
         request.session.modified = True
 
     # Kiểm tra nếu request là AJAX
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         cart_item_count = CartItem.objects.filter(user=request.user).count() if request.user.is_authenticated else len(request.session.get('cart', {}))
-        total_price = sum(item.room.price * item.quantity for item in CartItem.objects.filter(user=request.user)) if request.user.is_authenticated else sum(room['quantity'] for room in request.session.get('cart', {}).values())
+        total_price = sum(item.room.price * item.quantity * item.guests for item in CartItem.objects.filter(user=request.user)) if request.user.is_authenticated else sum(room['quantity'] for room in request.session.get('cart', {}).values())
         return JsonResponse({
             'success': True,
             'cart_count': cart_item_count,
-            'total_price': total_price
+            'total_price': total_price,
+            'item_total_price': cart_item.subtotal  # Trả về subtotal đã lưu trong CartItem
         })
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
@@ -159,3 +209,6 @@ def remove_from_cart(request, room_id):
         request.session.modified = True
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+def room_booked(request):
+    return render(request, "room_booked.html")

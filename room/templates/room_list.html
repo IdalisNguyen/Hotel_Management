@@ -18,7 +18,7 @@
                 {% for room in cart.cart_items %}
                 <div class="border-bottom pb-4 mb-4">
                     <div class="d-flex align-items-start mb-4">
-                        <img src="{{ room.image.url }}" alt="{{ room.name }}" class="rounded-lg me-4" width="100" height="100">
+                        <img src="{{ room.image_url }}" alt="{{ room.name }}" class="rounded-lg me-4" width="100" height="100">
                         <div class="flex-grow-1">
                             <h4 class="text-xl font-semibold">{{ room.name }}</h4>
                             <p class="text-gray-600"><i class="fas fa-map-marker-alt"></i> {{ room.state }}</p>
@@ -32,25 +32,25 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="text-sm text-gray-600">CHECK IN</p>
-                                <p class="font-semibold">{{ room.checkin }}</p>
+                                <p class="font-semibold">{{ room.checkin_date }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-600">CHECK OUT</p>
-                                <p class="font-semibold">{{ room.checkout }}</p>
+                                <p class="font-semibold">{{ room.checkout_date }}</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-600">OCCUPANCY</p>
+                                <p class="text-sm text-gray-600">SỨC CHỨA</p>
                                 <p class="font-semibold">{{ room.guests }} Guests</p>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-lg font-semibold">{{ room.price }} Đ x {{ room.quantity }}</p>
+                            <p class="text-lg font-semibold">{{ room.price }} Đ x {{ room.guests }} Khách x {{ room.num_days }} Ngày</p>
                             <p class="text-sm text-gray-600">Total rooms price (Incl. all taxes)</p>
                         </div>
                         <div class="bg-light p-4 rounded-lg">
-                            <p class="text-lg font-semibold">{{ room.total }} Đ</p>
+                            <p class="text-lg font-semibold">{{ room.total  }} Đ</p>
                         </div>
                     </div>
                 </div>
