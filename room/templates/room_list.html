@@ -51,12 +51,46 @@
                             <p class="text-lg font-semibold">{{ room.total }} Đ</p>
                         </div>
                     </div>
+
+                    <!-- Button to reveal user info form for each room -->
+                    <button class="btn btn-primary" onclick="toggleUserInfoForm({{ forloop.counter }})">XÁC NHẬN THANH TOÁN</button>
+                    
+                    <!-- User Information Form for each room, initially hidden -->
+                    <div class="user-info-form mt-3" id="user-info-form-{{ forloop.counter }}" style="display: none;">
+                        <div class="bg-white p-4 rounded-lg shadow-lg">
+                            <h3 class="h5 mb-4">Thông Tin Người Dùng</h3>
+                            <form method="POST" action="{% url 'submit_order' %}">
+                                {% csrf_token %}
+
+                                <!-- Hidden inputs to send room details -->
+                                <input type="hidden" name="room_id" value="{{ room.id }}">
+                                <input type="hidden" name="checkin_date" value="{{ room.checkin_date }}">
+                                <input type="hidden" name="checkout_date" value="{{ room.checkout_date }}">
+                                <input type="hidden" name="guests" value="{{ room.guests }}">
+                                <input type="hidden" name="total" value="{{ room.total }}">
+
+                                <!-- User information fields -->
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Họ và Tên</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ request.user.username }}" required readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ request.user.email }}" required readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Số Điện Thoại</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" value="{{ request.user.userprofile.phone }}" required>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Xác Nhận Đặt Phòng</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 {% endfor %}
             {% else %}
                 <p>Giỏ hàng của bạn hiện đang trống.</p>
             {% endif %}
-            <button class="btn btn-primary" onclick="showUserInfoForm()">XÁC NHẬN THANH TOÁN</button>
         </div>
 
         <!-- Total Summary -->
@@ -76,59 +110,15 @@
                 </div>
             </div>
         </div>
-        
-        <!-- User Information Form, initially hidden -->
-        <div class="col-lg-8 mt-4 user-info-form" style="display: none;">
-            <div class="bg-white p-4 rounded-lg shadow-lg">
-                <h3 class="h5 mb-4">Thông Tin Người Dùng</h3>
-                <form method="POST" action="{% url 'submit_order' %}" onsubmit="formatDates()">
-                    {% csrf_token %}
-
-                    <!-- Hidden inputs to send room details, including guests and total -->
-                    {% for room in cart.cart_items %}
-                        <input type="hidden" name="room_id_{{ forloop.counter }}" value="{{ room.id }}">
-                        <input type="hidden" id="checkin_date_{{ forloop.counter }}" name="checkin_date_{{ forloop.counter }}" value="{{ room.checkin_date }}">
-                        <input type="hidden" id="checkout_date_{{ forloop.counter }}" name="checkout_date_{{ forloop.counter }}" value="{{ room.checkout_date }}">
-                        <input type="hidden" name="guests_{{ forloop.counter }}" value="{{ room.guests }}">
-                        <input type="hidden" name="total_{{ forloop.counter }}" value="{{  cart.total_price }}">
-                    {% endfor %}
-                    <input type="hidden" name="room_count" value="{{ cart.cart_items|length }}">
-
-                    <!-- User information fields -->
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Họ và Tên</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ request.user.username }}" required readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ request.user.email }}" required readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Số Điện Thoại</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ request.user.userprofile.phone }}" required>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">Xác Nhận Đặt Phòng</button>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 
 <script>
-    function showUserInfoForm() {
-        document.querySelector('.user-info-form').style.display = 'block';
-    }
-
-    function formatDates() {
-        {% for room in cart.cart_items %}
-            const checkin = new Date('{{ room.checkin_date }}');
-            const checkout = new Date('{{ room.checkout_date }}');
-
-            // Format date to YYYY-MM-DD HH:MM:SS
-            document.getElementById('checkin_date_{{ forloop.counter }}').value = checkin.toISOString().slice(0, 19).replace('T', ' ');
-            document.getElementById('checkout_date_{{ forloop.counter }}').value = checkout.toISOString().slice(0, 19).replace('T', ' ');
-        {% endfor %}
-    }
+    function toggleUserInfoForm(roomNumber) {
+        const form = document.getElementById(`user-info-form-${roomNumber}`);
+        // Toggle the display of the form
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    };
 </script>
 
 {% endblock main_content %}

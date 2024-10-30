@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from room.models import Room, RoomBooking,CartItem
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
-from datetime import timedelta
-import datetime
+from datetime import datetime 
+from django.utils import timezone
 
 # Create your views here.
 def room_details_view(request, room_id):
@@ -213,48 +213,51 @@ def remove_from_cart(request, room_id):
 def room_booked(request):
     return render(request, "room_booked.html")
 
+@login_required
 def submit_order(request):
     if request.method == 'POST':
         user = request.user
         phone = request.POST.get('phone')
         email = request.POST.get('email')
-        room_count = int(request.POST.get('room_count', 0))
+        
+        # Get room-specific data from the submitted form
+        room_id = request.POST.get('room_id')
+        checkin_date_str = request.POST.get('checkin_date')
+        checkout_date_str = request.POST.get('checkout_date')
+        guests = int(request.POST.get('guests', 1))  # Default to 1 guest if not specified
+        subtotal = float(request.POST.get('total', 0.0))  # Default subtotal if not specified
 
-        if 'notifications' not in request.session:
-            request.session['notifications'] = []
-        notifications = request.session['notifications']
+        # Parse the checkin and checkout dates to a proper datetime format
+        checkin_date = datetime.strptime(checkin_date_str, '%b. %d, %Y')  # Example format: 'Oct. 30, 2024'
+        checkout_date = datetime.strptime(checkout_date_str, '%b. %d, %Y')
 
-        # Loop through each room's details
-        for i in range(1, room_count + 1):
-            room_id = request.POST.get(f'room_id_{i}')
-            checkin_date = request.POST.get(f'checkin_date_{i}')
-            checkout_date = request.POST.get(f'checkout_date_{i}')
-            guests = request.POST.get(f'guests_{i}', 1)  # Default to 1 guest
-            subtotal = request.POST.get(f'subtotal_{i}', 0.0)  # Default subtotal
+        # Fetch the room and ensure it exists
+        room = get_object_or_404(Room, id=room_id)
 
-            if room_id and checkin_date and checkout_date:
-                room = Room.objects.get(id=room_id)
-                booking = RoomBooking.objects.create(
-                    user=user,
-                    room=room,
-                    date_start=checkin_date,
-                    date_end=checkout_date,
-                    phone=phone,
-                    email=email,
-                    guests=guests,
-                    subtotal=subtotal
-                )
+        # Create the booking for this specific room
+        booking = RoomBooking.objects.create(
+            user=user,
+            room=room,
+            date_start=timezone.make_aware(checkin_date),
+            date_end=timezone.make_aware(checkout_date),
+            phone=phone,
+            email=email,
+            guests=guests,
+            subtotal=subtotal
+        )
 
-                # Add a notification message for the booked room
-                notification_message = f'Phòng {room.name} đã được đặt thành công từ {checkin_date} đến {checkout_date}!'
-                notifications.append(notification_message)
+        # Add a notification message for the booked room
+        notification_message = f'Phòng {room.name} đã được đặt thành công từ {checkin_date_str} đến {checkout_date_str}!'
+        request.session['notifications'] = request.session.get('notifications', [])
+        request.session['notifications'].append(notification_message)
 
-                # Remove the room from the cart after booking
-                remove_from_cart(request, room_id)
+        # Remove the specific room from the cart after booking
+        remove_from_cart(request, room_id)
 
-        # Save the notifications to the session
-        request.session['notifications'] = notifications
+        # Save notifications back to the session
+        request.session.modified = True
         messages.success(request, "Your booking has been confirmed!")
-        return redirect('home')  # Redirect to the success page
 
-    return redirect('cart')  # Redirect back if request is not POST
+        return redirect('home')  # Redirect to the homepage or booking confirmation page
+
+    return redirect('cart')  # Redirect back to the cart if the request is not POST
