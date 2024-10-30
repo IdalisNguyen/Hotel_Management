@@ -5,15 +5,13 @@
 
 <br>
 
-<!-- Thông tin về các phòng trong giỏ hàng -->
 <div class="container mt-6">
     <div class="row">
-        <!-- Phần hiển thị các phòng trong giỏ hàng -->
-        <div class="col-lg-8" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 20px; background-color: white;">
+        <!-- User Information and Booking Summary -->
+        <div class="col-lg-8 mb-4" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 20px; background-color: white;">
             <h2 class="text-2xl font-semibold mb-4">Tóm tắt về phòng &amp; giá cả</h2>
             <h3 class="text-lg font-semibold mb-2">GIỎ HÀNG CỦA BẠN</h3>
 
-            <!-- Vòng lặp qua các phòng để hiển thị thông tin -->
             {% if cart.cart_items %}
                 {% for room in cart.cart_items %}
                 <div class="border-bottom pb-4 mb-4">
@@ -50,7 +48,7 @@
                             <p class="text-sm text-gray-600">Total rooms price (Incl. all taxes)</p>
                         </div>
                         <div class="bg-light p-4 rounded-lg">
-                            <p class="text-lg font-semibold">{{ room.total  }} Đ</p>
+                            <p class="text-lg font-semibold">{{ room.total }} Đ</p>
                         </div>
                     </div>
                 </div>
@@ -58,10 +56,10 @@
             {% else %}
                 <p>Giỏ hàng của bạn hiện đang trống.</p>
             {% endif %}
-            <button class="btn btn-primary">XÁC NHẬN THANH TOÁN</button>
+            <button class="btn btn-primary" onclick="showUserInfoForm()">XÁC NHẬN THANH TOÁN</button>
         </div>
 
-        <!-- Tóm tắt chi phí tổng cộng ở bên phải -->
+        <!-- Total Summary -->
         <div class="col-lg-4">
             <div class="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
                 <div class="mb-4">
@@ -78,7 +76,59 @@
                 </div>
             </div>
         </div>
+        
+        <!-- User Information Form, initially hidden -->
+        <div class="col-lg-8 mt-4 user-info-form" style="display: none;">
+            <div class="bg-white p-4 rounded-lg shadow-lg">
+                <h3 class="h5 mb-4">Thông Tin Người Dùng</h3>
+                <form method="POST" action="{% url 'submit_order' %}" onsubmit="formatDates()">
+                    {% csrf_token %}
+
+                    <!-- Hidden inputs to send room details, including guests and total -->
+                    {% for room in cart.cart_items %}
+                        <input type="hidden" name="room_id_{{ forloop.counter }}" value="{{ room.id }}">
+                        <input type="hidden" id="checkin_date_{{ forloop.counter }}" name="checkin_date_{{ forloop.counter }}" value="{{ room.checkin_date }}">
+                        <input type="hidden" id="checkout_date_{{ forloop.counter }}" name="checkout_date_{{ forloop.counter }}" value="{{ room.checkout_date }}">
+                        <input type="hidden" name="guests_{{ forloop.counter }}" value="{{ room.guests }}">
+                        <input type="hidden" name="total_{{ forloop.counter }}" value="{{  cart.total_price }}">
+                    {% endfor %}
+                    <input type="hidden" name="room_count" value="{{ cart.cart_items|length }}">
+
+                    <!-- User information fields -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Họ và Tên</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ request.user.username }}" required readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ request.user.email }}" required readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Số Điện Thoại</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" value="{{ request.user.userprofile.phone }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Xác Nhận Đặt Phòng</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    function showUserInfoForm() {
+        document.querySelector('.user-info-form').style.display = 'block';
+    }
+
+    function formatDates() {
+        {% for room in cart.cart_items %}
+            const checkin = new Date('{{ room.checkin_date }}');
+            const checkout = new Date('{{ room.checkout_date }}');
+
+            // Format date to YYYY-MM-DD HH:MM:SS
+            document.getElementById('checkin_date_{{ forloop.counter }}').value = checkin.toISOString().slice(0, 19).replace('T', ' ');
+            document.getElementById('checkout_date_{{ forloop.counter }}').value = checkout.toISOString().slice(0, 19).replace('T', ' ');
+        {% endfor %}
+    }
+</script>
 
 {% endblock main_content %}

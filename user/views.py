@@ -3,6 +3,7 @@ from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
 from home import views as home
+from .models import UserProfile  # Import the UserProfile model
 
 # Create your views here.
 def index(request):
@@ -37,16 +38,21 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        phone = request.POST.get('phone')  # Capture the phone number
 
+        # Check for existing username or email
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists.')
         elif User.objects.filter(email=email).exists():
             messages.error(request, 'Email already exists.')
         else:
+            # Create the user
             user = User.objects.create_user(username=username, email=email, password=password)
-            user.save()  # Save the user to the MySQL database
+            
+            # Create a UserProfile with the phone number
+            UserProfile.objects.create(user=user, phone=phone)
             
             messages.success(request, 'Registration successful! You can now log in.')
-            return redirect('login')  # Redirect to the login page after registration
+            return redirect('login')  # Redirect to login page after registration
 
     return render(request, 'register.html')

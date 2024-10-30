@@ -121,7 +121,7 @@ def book_room(request):
         )
 
         # Thêm thông báo mới vào session
-        new_notification = f'Phòng {room.name} đã được đặt thành công từ {date_start} đến {date_end}!'
+        new_notification = f'Phòng {room.name} đã được đặt thành công từ {date_start} đến {date_end}, Nhân viên hỗ trợ bên khách sạn sẽ liên hệ lại với bạn ngay lập tức!!!'
         if 'notifications' not in request.session:
             request.session['notifications'] = []
 
@@ -212,3 +212,49 @@ def remove_from_cart(request, room_id):
 
 def room_booked(request):
     return render(request, "room_booked.html")
+
+def submit_order(request):
+    if request.method == 'POST':
+        user = request.user
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        room_count = int(request.POST.get('room_count', 0))
+
+        if 'notifications' not in request.session:
+            request.session['notifications'] = []
+        notifications = request.session['notifications']
+
+        # Loop through each room's details
+        for i in range(1, room_count + 1):
+            room_id = request.POST.get(f'room_id_{i}')
+            checkin_date = request.POST.get(f'checkin_date_{i}')
+            checkout_date = request.POST.get(f'checkout_date_{i}')
+            guests = request.POST.get(f'guests_{i}', 1)  # Default to 1 guest
+            subtotal = request.POST.get(f'subtotal_{i}', 0.0)  # Default subtotal
+
+            if room_id and checkin_date and checkout_date:
+                room = Room.objects.get(id=room_id)
+                booking = RoomBooking.objects.create(
+                    user=user,
+                    room=room,
+                    date_start=checkin_date,
+                    date_end=checkout_date,
+                    phone=phone,
+                    email=email,
+                    guests=guests,
+                    subtotal=subtotal
+                )
+
+                # Add a notification message for the booked room
+                notification_message = f'Phòng {room.name} đã được đặt thành công từ {checkin_date} đến {checkout_date}!'
+                notifications.append(notification_message)
+
+                # Remove the room from the cart after booking
+                remove_from_cart(request, room_id)
+
+        # Save the notifications to the session
+        request.session['notifications'] = notifications
+        messages.success(request, "Your booking has been confirmed!")
+        return redirect('home')  # Redirect to the success page
+
+    return redirect('cart')  # Redirect back if request is not POST

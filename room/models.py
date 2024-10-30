@@ -33,22 +33,24 @@ class Room(models.Model):
 
 class RoomBooking(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True, default=2)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey('Room', on_delete=models.CASCADE)
     date_start = models.DateTimeField()
     date_end = models.DateTimeField()
-    phone = models.CharField(max_length=15, blank=True, null=True)  # Để trống ban đầu
-    email = models.EmailField()  # Email vẫn bắt buộc
-    message = models.TextField(blank=True, null=True)  # Optional
+    phone = models.CharField(max_length=15, blank=True, null=True)  # Optional phone number
+    email = models.EmailField()  # Required email field
+    message = models.TextField(blank=True, null=True)  # Optional message
+    guests = models.IntegerField(default=1)  # Number of guests
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Subtotal price for the booking
 
     def save(self, *args, **kwargs):
-        # Tự động lấy email từ người dùng trước khi lưu
-        if self.user:
-            self.email = self.user.email  # Lấy email từ User
+        # Auto-assign email from user if not provided
+        if self.user and not self.email:
+            self.email = self.user.email
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Booking by {self.user} for room {self.room} from {self.date_start} to {self.date_end}"
-    
+        return f"Booking by {self.user} for room {self.room} from {self.date_start} to {self.date_end} with {self.guests} guests"
+
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey('Room', on_delete=models.CASCADE)
