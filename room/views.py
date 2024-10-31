@@ -1,38 +1,39 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from room.models import Room, RoomBooking,CartItem
-from django.http import HttpResponse,JsonResponse
+from room.models import Room, RoomBooking, CartItem
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from datetime import datetime 
 from django.utils import timezone
 
-# Create your views here.
+# Xem chi tiết phòng
 def room_details_view(request, room_id):
-    room = get_object_or_404(Room, id=room_id)  # Lấy phòng theo id
+    room = get_object_or_404(Room, id=room_id)  # Lấy phòng theo ID
     return render(request, 'room_details.html', {'room': room})  
 
+# Hiển thị danh sách phòng và giỏ hàng
 def list_room(request):
     cart_items = []
     total_price = 0
     item_count = 0
 
     if request.user.is_authenticated:
-        # Lấy giỏ hàng từ cơ sở dữ liệu nếu người dùng đã đăng nhập
+        # Nếu người dùng đã đăng nhập, lấy giỏ hàng từ cơ sở dữ liệu
         cart_items_db = CartItem.objects.filter(user=request.user)
         for item in cart_items_db:
             room = item.room
             
             # Tính số ngày giữa checkin và checkout
             num_days = (item.checkout - item.checkin).days
-            if num_days < 1:  # Trường hợp checkout < checkin, mặc định ít nhất 1 ngày
+            if num_days < 1:  # Mặc định ít nhất là 1 ngày nếu checkout < checkin
                 num_days = 1
 
-            # Tính tổng giá cho item này với số ngày
+            # Tính tổng giá cho mục này với số ngày
             item_total_price = item.subtotal * num_days
             total_price += item_total_price
             item_count += item.quantity
             
-            # Thêm thông tin vào cart_items
+            # Thêm thông tin vào danh sách cart_items
             cart_items.append({
                 'id': room.id,
                 'name': room.name,
@@ -46,7 +47,7 @@ def list_room(request):
                 'total': item_total_price,  # Tổng giá với số ngày đã tính
             })
     else:
-        # Lấy giỏ hàng từ session nếu người dùng chưa đăng nhập
+        # Nếu người dùng chưa đăng nhập, lấy giỏ hàng từ session
         cart = request.session.get('cart', {})
         for room_id, details in cart.items():
             try:
@@ -64,14 +65,14 @@ def list_room(request):
                     if num_days < 1:
                         num_days = 1
                 else:
-                    num_days = 1  # Nếu thiếu ngày thì mặc định là 1 ngày
+                    num_days = 1  # Mặc định là 1 ngày nếu thiếu ngày
 
-                # Tính tổng giá cho item này với số ngày
+                # Tính tổng giá cho mục này với số ngày
                 item_total_price = room.price * quantity * guests * num_days
                 total_price += item_total_price
                 item_count += quantity
                 
-                # Thêm thông tin vào cart_items
+                # Thêm thông tin vào danh sách cart_items
                 cart_items.append({
                     'id': room.id,
                     'name': room.name,
@@ -98,6 +99,8 @@ def list_room(request):
     }
 
     return render(request, 'room_list.html', context)
+
+# Đặt phòng
 @login_required
 def book_room(request):
     if request.method == 'POST':
@@ -134,12 +137,13 @@ def book_room(request):
     rooms = Room.objects.all()
     return render(request, 'booking_room.html', {'rooms': rooms})
 
+# Xóa thông báo
 @login_required
 def clear_notifications(request):
     request.session['notifications'] = []  # Xóa tất cả thông báo
     return redirect('home')  # Hoặc điều hướng đến trang mong muốn
 
-
+# Thêm phòng vào giỏ hàng
 def add_to_cart(request, room_id):
     room = get_object_or_404(Room, id=room_id)
 
@@ -159,7 +163,7 @@ def add_to_cart(request, room_id):
             cart_item.quantity += 1
             cart_item.save()
 
-        # Tính subtotal cho item này
+        # Tính subtotal cho mục này
         cart_item.subtotal = cart_item.room.price * cart_item.quantity * cart_item.guests
         cart_item.save()
 
@@ -195,6 +199,7 @@ def add_to_cart(request, room_id):
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
+# Xóa phòng khỏi giỏ hàng
 @login_required
 def remove_from_cart(request, room_id):
     if request.user.is_authenticated:
@@ -210,9 +215,11 @@ def remove_from_cart(request, room_id):
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
+# Xác nhận đặt phòng
 def room_booked(request):
     return render(request, "room_booked.html")
 
+# Gửi đơn hàng đặt phòng
 @login_required
 def submit_order(request):
     if request.method == 'POST':
@@ -220,21 +227,21 @@ def submit_order(request):
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         
-        # Get room-specific data from the submitted form
+        # Lấy dữ liệu phòng cụ thể từ form đã gửi
         room_id = request.POST.get('room_id')
         checkin_date_str = request.POST.get('checkin_date')
         checkout_date_str = request.POST.get('checkout_date')
-        guests = int(request.POST.get('guests', 1))  # Default to 1 guest if not specified
-        subtotal = float(request.POST.get('total', 0.0))  # Default subtotal if not specified
+        guests = int(request.POST.get('guests', 1))  # Mặc định là 1 khách nếu không có
+        subtotal = float(request.POST.get('total', 0.0))  # Mặc định subtotal nếu không có
 
-        # Parse the checkin and checkout dates to a proper datetime format
-        checkin_date = datetime.strptime(checkin_date_str, '%b. %d, %Y')  # Example format: 'Oct. 30, 2024'
+        # Chuyển đổi ngày checkin và checkout sang định dạng datetime hợp lệ
+        checkin_date = datetime.strptime(checkin_date_str, '%b. %d, %Y')  # Ví dụ định dạng: 'Oct. 30, 2024'
         checkout_date = datetime.strptime(checkout_date_str, '%b. %d, %Y')
 
-        # Fetch the room and ensure it exists
+        # Lấy phòng và đảm bảo phòng tồn tại
         room = get_object_or_404(Room, id=room_id)
 
-        # Create the booking for this specific room
+        # Tạo đơn đặt cho phòng cụ thể này
         booking = RoomBooking.objects.create(
             user=user,
             room=room,
@@ -246,18 +253,18 @@ def submit_order(request):
             subtotal=subtotal
         )
 
-        # Add a notification message for the booked room
+        # Thêm thông báo cho phòng đã đặt
         notification_message = f'Phòng {room.name} đã được đặt thành công từ {checkin_date_str} đến {checkout_date_str}!'
         request.session['notifications'] = request.session.get('notifications', [])
         request.session['notifications'].append(notification_message)
 
-        # Remove the specific room from the cart after booking
+        # Xóa phòng này khỏi giỏ hàng sau khi đặt
         remove_from_cart(request, room_id)
 
-        # Save notifications back to the session
+        # Lưu thông báo vào session
         request.session.modified = True
         messages.success(request, "Your booking has been confirmed!")
 
-        return redirect('home')  # Redirect to the homepage or booking confirmation page
+        return redirect('home')  # Điều hướng về trang chủ hoặc trang xác nhận đặt phòng
 
-    return redirect('cart')  # Redirect back to the cart if the request is not POST
+    return redirect('cart')  # Điều hướng về giỏ hàng nếu yêu cầu không phải là POST
