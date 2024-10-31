@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 # Create your views here.
-def index(request):
+def vehicle(request):
     return render(request,'vehicle.html')
-def index1(request):
-    return HttpResponse("this is vehicle Details")
+def vehicle_booking(request):
+    return render(request,'vehicle_booking.html')
+
 
