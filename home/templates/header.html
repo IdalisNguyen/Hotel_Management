@@ -1,55 +1,174 @@
-{% comment %} {% extends "home.html" %} {% endcomment %}
+{% comment %} {% extends 'home.html' %} {% endcomment %}
 {% load static %}
 
-{% comment %} {% block header %} {% endcomment %}
-<header>
+{% comment %} {% block header %}
+  {% endcomment %}
+  <header>
     <!-- header inner -->
     <div class="header">
-       <div class="container">
-          <div class="row">
-             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
-                <div class="full">
-                   <div class="center-desk">
-                      <div class="logo">
-                        <a href="/"><h1 id="logo-text">Banana Blink</h1></a>
-                      </div>
-                   </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
+            <div class="full">
+              <div class="center-desk">
+                <div class="logo">
+                  <a href="/"><h1 id="logo-text">Banana Blink</h1></a>
                 </div>
-             </div>
-             <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
-                <nav class="navigation navbar navbar-expand-md navbar-dark ">
-                   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
-                   <span class="navbar-toggler-icon"></span>
-                   </button>
-                   <div class="collapse navbar-collapse" id="navbarsExample04">
-                      <ul class="navbar-nav mr-auto">
-                         <li class="nav-item active">
-                            <a class="nav-link" href="index.html">Home</a>
-                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">About</a>
-                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" href="{% url "list_room" %}">Our room</a>
-                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" href="gallery.html">Gallery</a>
-                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" href="blog.html">Blog</a>
-                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact Us</a>
-                         </li>
-                         <li class="nav-item">
-                           <a class="nav-link" href="{% url "login" %}">Login</a>
-                        </li>
-                      </ul>
-                   </div>
-                </nav>
-             </div>
+              </div>
+            </div>
           </div>
-       </div>
+          <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
+            <nav class="navigation navbar navbar-expand-md navbar-dark">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+              <div class="collapse navbar-collapse" id="navbarsExample04">
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'list_room' %}">Our room</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="gallery.html">Gallery</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact Us</a>
+                  </li>
+
+                  <!-- Hiển thị nút "Login" nếu người dùng chưa đăng nhập -->
+                  {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt" style="font-size: 24px;"></i> <!-- Icon đăng nhập -->
+                        Login
+                      </a>
+                    </li>
+                  {% else %}
+                    <!-- Hiển thị icon người dùng nếu đã đăng nhập -->
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-circle" style="font-size: 24px;"></i> <!-- Icon người dùng --></a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <p>User is logged in: {{ user.username }}</p>
+                        <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="{% url "room_booked" %}">Orders</a>
+                        <a class="dropdown-item" href="{% url 'login' %}">Logout</a> <!-- Đăng xuất -->
+                      </div>
+                    </li>
+
+                    <!-- Biểu tượng giỏ hàng -->
+                    <li class="nav-item dropdown">
+                      <a class="nav-link d-flex align-items-center" href="{% url 'list_room' %}" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="position-relative">
+                          <i class="fas fa-shopping-cart" style="font-size: 24px;"></i>
+                          <!-- Hiển thị số lượng phòng trong badge -->
+                          <span class="badge badge-danger">{{ cart.item_count|default:0 }}</span>
+                        </div>
+                        <i class="fas fa-caret-down ms-2"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-end p-4 cart-dropdown-menu" aria-labelledby="cartDropdown" id="cart-items">
+                        <h6 class="dropdown-header">Giỏ hàng</h6>
+                        <div id="cart-content">
+                          {% if cart.cart_items %}
+                            {% for room in cart.cart_items %}
+                              <a href="{% url 'list_room' %}" class="text-decoration-none text-dark">
+                                <div class="d-flex justify-content-between mb-3">
+                                  <div class="d-flex align-items-center">
+                                    <img src="{{ room.image_url}}" alt="{{ room.name }}" class="rounded" width="60" height="60" />
+                                    <div class="ms-3">
+                                      <h6>{{ room.name }}</h6>
+                                      <small>{{ room.price }} Đ x {{ room.quantity }}</small>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <form method="POST" action="{% url 'remove_from_cart' room.id %}">
+                                      {% csrf_token %}
+                                      <button type="submit" class="btn btn-link p-0 text-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                      </button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </a>
+                            {% endfor %}
+                            <div class="d-flex justify-content-between mt-4">
+                              <span>Tổng cộng:</span>
+                              <strong id="cart-total-price">{{ cart.total_price }} Đ</strong>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3">Thanh toán</button>
+                          {% else %}
+                            <p class="text-center">Giỏ hàng trống</p>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </li>
+                    
+
+                    <!-- Biểu tượng chuông thông báo -->
+                    {% if request.session.notifications %}
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-bell" style="font-size: 24px;"></i>
+                          <span class="badge badge-danger">{{ request.session.notifications|length }}</span> <!-- Số lượng thông báo -->
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                          <h6 class="dropdown-header">Thông báo</h6>
+                          {% for notification in request.session.notifications %}
+                            <a class="dropdown-item" href="#">{{ notification }}</a>
+                            {% if not forloop.last %}
+                              <div class="dropdown-divider"></div>
+                            {% endif %}
+                          {% endfor %}
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="{% url 'clear_notifications' %}">Xóa tất cả thông báo</a>
+                        </div>
+                      </li>
+                    {% else %}
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-bell" style="font-size: 24px;"></i>
+                          <span class="badge badge-secondary">0</span> <!-- Không có thông báo -->
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                          <h6 class="dropdown-header">Không có thông báo mới</h6>
+                        </div>
+                      </li>
+                    {% endif %}
+                  {% endif %}
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
     </div>
- </header>
-{% comment %} {% endblock header %} {% endcomment %}
+  </header>
+
+
+  <style>
+/* Tăng kích thước của dropdown menu giỏ hàng */
+.cart-dropdown-menu {
+  min-width: 400px;  /* Tăng độ rộng tối thiểu của dropdown giỏ hàng */
+  max-width: 500px;  /* Giới hạn độ rộng tối đa của dropdown giỏ hàng */
+  padding: 20px;     /* Tăng khoảng cách padding bên trong để giỏ hàng trông thoải mái hơn */
+}
+
+/* Tăng khoảng cách giữa các sản phẩm trong dropdown */
+#cart-content .d-flex {
+  margin-bottom: 20px;  /* Tăng khoảng cách giữa các sản phẩm */
+}
+
+/* Tăng kích thước hình ảnh sản phẩm */
+#cart-items img {
+  width: 70px;  /* Tăng kích thước chiều rộng hình ảnh sản phẩm */
+  height: 70px; /* Tăng kích thước chiều cao hình ảnh sản phẩm */
+  object-fit: cover; /* Giữ hình ảnh nằm trong khung */
+}
+
+/* Nút thanh toán lớn hơn */
+#cart-items .btn-primary {
+  padding: 12px;      /* Tăng kích thước padding của nút */
+  font-size: 16px;    /* Tăng kích thước chữ trên nút thanh toán */
+}
+  </style>
+  {% comment %}
+{% endblock %} {% endcomment %}

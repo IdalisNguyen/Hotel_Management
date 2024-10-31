@@ -9,27 +9,44 @@
         {% csrf_token %}
         <h1 class="login__title">Register</h1>
 
+        <!-- Display error messages if any -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
         <div class="login__content">
+            <!-- Username input -->
             <div class="login__box">
                 <i class="ri-user-3-line login__icon"></i>
-
                 <div class="login__box-input">
                     <input type="text" required class="login__input" id="login-username" name="username" placeholder=" ">
                     <label for="login-username" class="login__label">Username</label>
                 </div>
             </div>
-            <div class="login__box">
-                <i class="ri-user-3-line login__icon"></i>
 
+            <!-- Email input -->
+            <div class="login__box">
+                <i class="ri-mail-line login__icon"></i>
                 <div class="login__box-input">
                     <input type="email" required class="login__input" id="login-email" name="email" placeholder=" ">
                     <label for="login-email" class="login__label">Email</label>
                 </div>
             </div>
 
+            <!-- Phone number input -->
+            <div class="login__box">
+                <i class="ri-phone-line login__icon"></i>
+                <div class="login__box-input">
+                    <input type="tel" required class="login__input" id="login-phone" name="phone" placeholder=" " pattern="^\+?\d{10,15}$" title="Enter a valid phone number">
+                    <label for="login-phone" class="login__label">Phone Number</label>
+                </div>
+            </div>
+
+            <!-- Password input -->
             <div class="login__box">
                 <i class="ri-lock-2-line login__icon"></i>
-
                 <div class="login__box-input">
                     <input type="password" required class="login__input" id="login-pass" name="password" placeholder=" ">
                     <label for="login-pass" class="login__label">Password</label>
@@ -53,11 +70,5 @@
             Already have an account? <a href="{% url 'login' %}">Login</a>
         </p>
     </form>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-danger">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
 </div>
 {% endblock main_content %}

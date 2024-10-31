@@ -3,6 +3,122 @@
 
 {% block main_content %}
 
-list room
+<br>
+
+<div class="container mt-6">
+    <div class="row">
+        <!-- User Information and Booking Summary -->
+        <div class="col-lg-8 mb-4" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 20px; background-color: white;">
+            <h2 class="text-2xl font-semibold mb-4">Tóm tắt về phòng &amp; giá cả</h2>
+            <h3 class="text-lg font-semibold mb-2">GIỎ HÀNG CỦA BẠN</h3>
+
+            {% if cart.cart_items %}
+                {% for room in cart.cart_items %}
+                <div class="border-bottom pb-4 mb-4">
+                    <div class="d-flex align-items-start mb-4">
+                        <img src="{{ room.image_url }}" alt="{{ room.name }}" class="rounded-lg me-4" width="100" height="100">
+                        <div class="flex-grow-1">
+                            <h4 class="text-xl font-semibold">{{ room.name }}</h4>
+                            <p class="text-gray-600"><i class="fas fa-map-marker-alt"></i> {{ room.state }}</p>
+                        </div>
+                        <form method="POST" action="{% url 'remove_from_cart' room.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link text-danger"><i class="fas fa-trash-alt"></i> Remove</button>
+                        </form>
+                    </div>
+                    <div class="bg-light p-4 rounded-lg mb-4">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-sm text-gray-600">CHECK IN</p>
+                                <p class="font-semibold">{{ room.checkin_date }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">CHECK OUT</p>
+                                <p class="font-semibold">{{ room.checkout_date }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">SỨC CHỨA</p>
+                                <p class="font-semibold">{{ room.guests }} Guests</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-lg font-semibold">{{ room.price }} Đ x {{ room.guests }} Khách x {{ room.num_days }} Ngày</p>
+                            <p class="text-sm text-gray-600">Total rooms price (Incl. all taxes)</p>
+                        </div>
+                        <div class="bg-light p-4 rounded-lg">
+                            <p class="text-lg font-semibold">{{ room.total }} Đ</p>
+                        </div>
+                    </div>
+
+                    <!-- Button to reveal user info form for each room -->
+                    <button class="btn btn-primary" onclick="toggleUserInfoForm({{ forloop.counter }})">XÁC NHẬN THANH TOÁN</button>
+                    
+                    <!-- User Information Form for each room, initially hidden -->
+                    <div class="user-info-form mt-3" id="user-info-form-{{ forloop.counter }}" style="display: none;">
+                        <div class="bg-white p-4 rounded-lg shadow-lg">
+                            <h3 class="h5 mb-4">Thông Tin Người Dùng</h3>
+                            <form method="POST" action="{% url 'submit_order' %}">
+                                {% csrf_token %}
+
+                                <!-- Hidden inputs to send room details -->
+                                <input type="hidden" name="room_id" value="{{ room.id }}">
+                                <input type="hidden" name="checkin_date" value="{{ room.checkin_date }}">
+                                <input type="hidden" name="checkout_date" value="{{ room.checkout_date }}">
+                                <input type="hidden" name="guests" value="{{ room.guests }}">
+                                <input type="hidden" name="total" value="{{ room.total }}">
+
+                                <!-- User information fields -->
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Họ và Tên</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ request.user.username }}" required readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ request.user.email }}" required readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Số Điện Thoại</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" value="{{ request.user.userprofile.phone }}" required>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Xác Nhận Đặt Phòng</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Giỏ hàng của bạn hiện đang trống.</p>
+            {% endif %}
+        </div>
+
+        <!-- Total Summary -->
+        <div class="col-lg-4">
+            <div class="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
+                <div class="mb-4">
+                    <p class="text-gray-600 font-medium">Total rooms cost (tax incl)</p>
+                    <p class="text-lg font-semibold text-gray-800">{{ cart.total_price }} Đ</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-600 font-medium">Total tax</p>
+                    <p class="text-lg font-semibold text-gray-800">0 Đ</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-600 font-medium">Final Total</p>
+                    <p class="text-2xl font-semibold text-primary">{{ cart.total_price }} Đ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleUserInfoForm(roomNumber) {
+        const form = document.getElementById(`user-info-form-${roomNumber}`);
+        // Toggle the display of the form
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    };
+</script>
 
 {% endblock main_content %}
