@@ -149,7 +149,7 @@ def add_to_cart(request, room_id):
 
     # Kiểm tra trạng thái phòng
     if room.state_id == 2:
-        notification_message = f'Không thể {room.name} đã được đặt thành công vì Trạng thái không sẵn sàng!'
+        notification_message = f'Không thể thêm {room.name} vì trạng thái không sẵn sàng!'
         request.session['notifications'] = request.session.get('notifications', [])
         request.session['notifications'].append(notification_message)
         messages.error(request, f"Phòng {room.name} hiện không khả dụng để đặt. Vui lòng chọn phòng khác.")
@@ -194,6 +194,10 @@ def add_to_cart(request, room_id):
         request.session['cart'] = cart
         request.session.modified = True
 
+    # Cập nhật trạng thái phòng thành "Không sẵn sàng" (state_id = 2)
+    room.state_id = 2
+    room.save()
+
     # Kiểm tra nếu request là AJAX
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         cart_item_count = CartItem.objects.filter(user=request.user).count() if request.user.is_authenticated else len(request.session.get('cart', {}))
@@ -202,15 +206,18 @@ def add_to_cart(request, room_id):
             'success': True,
             'cart_count': cart_item_count,
             'total_price': total_price,
-            'item_total_price': cart_item.subtotal if request.user.is_authenticated else 0  # Trả về subtotal đã lưu trong CartItem nếu người dùng đã đăng nhập
+            'item_total_price': cart_item.subtotal if request.user.is_authenticated else 0
         })
 
     # Thêm thông báo thành công khi phòng sẵn sàng để đặt
     messages.success(request, f"Phòng {room.name} đã được thêm vào giỏ hàng của bạn thành công.")
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
 # Xóa phòng khỏi giỏ hàng
 @login_required
 def remove_from_cart(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+    
     if request.user.is_authenticated:
         # Nếu người dùng đã đăng nhập, xóa item trong giỏ hàng từ cơ sở dữ liệu
         CartItem.objects.filter(user=request.user, room_id=room_id).delete()
@@ -222,9 +229,12 @@ def remove_from_cart(request, room_id):
         request.session['cart'] = cart
         request.session.modified = True
 
+    # Cập nhật trạng thái phòng thành "Sẵn sàng" (state_id = 1)
+    room.state_id = 1
+    room.save()
+
+    messages.info(request, f"Phòng {room.name} đã được xóa khỏi giỏ hàng.")
     return redirect(request.META.get('HTTP_REFERER', '/'))
-
-
 # Gửi đơn hàng đặt phòng
 @login_required
 def submit_order(request):
