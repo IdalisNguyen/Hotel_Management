@@ -147,6 +147,14 @@ def clear_notifications(request):
 def add_to_cart(request, room_id):
     room = get_object_or_404(Room, id=room_id)
 
+    # Kiểm tra trạng thái phòng
+    if room.state_id == 2:
+        notification_message = f'Không thể {room.name} đã được đặt thành công vì Trạng thái không sẵn sàng!'
+        request.session['notifications'] = request.session.get('notifications', [])
+        request.session['notifications'].append(notification_message)
+        messages.error(request, f"Phòng {room.name} hiện không khả dụng để đặt. Vui lòng chọn phòng khác.")
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
     if request.user.is_authenticated:
         # Nếu người dùng đã đăng nhập, lưu vào cơ sở dữ liệu
         cart_item, created = CartItem.objects.get_or_create(
@@ -194,11 +202,12 @@ def add_to_cart(request, room_id):
             'success': True,
             'cart_count': cart_item_count,
             'total_price': total_price,
-            'item_total_price': cart_item.subtotal  # Trả về subtotal đã lưu trong CartItem
+            'item_total_price': cart_item.subtotal if request.user.is_authenticated else 0  # Trả về subtotal đã lưu trong CartItem nếu người dùng đã đăng nhập
         })
 
+    # Thêm thông báo thành công khi phòng sẵn sàng để đặt
+    messages.success(request, f"Phòng {room.name} đã được thêm vào giỏ hàng của bạn thành công.")
     return redirect(request.META.get('HTTP_REFERER', '/'))
-
 # Xóa phòng khỏi giỏ hàng
 @login_required
 def remove_from_cart(request, room_id):
@@ -215,9 +224,6 @@ def remove_from_cart(request, room_id):
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
-# Xác nhận đặt phòng
-def room_booked(request):
-    return render(request, "room_booked.html")
 
 # Gửi đơn hàng đặt phòng
 @login_required
@@ -233,7 +239,7 @@ def submit_order(request):
         checkout_date_str = request.POST.get('checkout_date')
         guests = int(request.POST.get('guests', 1))  # Mặc định là 1 khách nếu không có
         subtotal = float(request.POST.get('total', 0.0))  # Mặc định subtotal nếu không có
-
+            
         # Chuyển đổi ngày checkin và checkout sang định dạng datetime hợp lệ
         checkin_date = datetime.strptime(checkin_date_str, '%b. %d, %Y')  # Ví dụ định dạng: 'Oct. 30, 2024'
         checkout_date = datetime.strptime(checkout_date_str, '%b. %d, %Y')
@@ -250,7 +256,9 @@ def submit_order(request):
             phone=phone,
             email=email,
             guests=guests,
-            subtotal=subtotal
+            subtotal=subtotal,
+            image=room.image
+            
         )
 
         # Thêm thông báo cho phòng đã đặt
@@ -268,3 +276,13 @@ def submit_order(request):
         return redirect('home')  # Điều hướng về trang chủ hoặc trang xác nhận đặt phòng
 
     return redirect('cart')  # Điều hướng về giỏ hàng nếu yêu cầu không phải là POST
+
+
+# Xác nhận đặt phòng
+@login_required  # đảm bảo chỉ người dùng đã đăng nhập mới có thể truy cập
+def room_booked(request):
+    # Lấy tất cả thông tin phòng đã đặt của người dùng đang đăng nhập
+    bookings = RoomBooking.objects.filter(user=request.user)
+    
+    # Truyền thông tin phòng đã đặt vào template
+    return render(request, "room_booked.html", {"bookings": bookings})

@@ -7,7 +7,7 @@
 
 <div class="container mt-6">
     <div class="row">
-        <!-- User Information and Booking Summary -->
+        <!-- Thông tin người dùng và tóm tắt đặt chỗ -->
         <div class="col-lg-8 mb-4" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 20px; background-color: white;">
             <h2 class="text-2xl font-semibold mb-4">Tóm tắt về phòng &amp; giá cả</h2>
             <h3 class="text-lg font-semibold mb-2">GIỎ HÀNG CỦA BẠN</h3>
@@ -52,24 +52,25 @@
                         </div>
                     </div>
 
-                    <!-- Button to reveal user info form for each room -->
+                    <!-- Nút hiển thị mẫu thông tin người dùng cho mỗi phòng -->
                     <button class="btn btn-primary" onclick="toggleUserInfoForm({{ forloop.counter }})">XÁC NHẬN THANH TOÁN</button>
                     
-                    <!-- User Information Form for each room, initially hidden -->
+                    <!-- Mẫu thông tin người dùng cho mỗi phòng, ban đầu được ẩn -->
                     <div class="user-info-form mt-3" id="user-info-form-{{ forloop.counter }}" style="display: none;">
                         <div class="bg-white p-4 rounded-lg shadow-lg">
                             <h3 class="h5 mb-4">Thông Tin Người Dùng</h3>
                             <form method="POST" action="{% url 'submit_order' %}">
                                 {% csrf_token %}
 
-                                <!-- Hidden inputs to send room details -->
+                                <!-- Đầu vào ẩn để gửi chi tiết phòng -->
                                 <input type="hidden" name="room_id" value="{{ room.id }}">
                                 <input type="hidden" name="checkin_date" value="{{ room.checkin_date }}">
                                 <input type="hidden" name="checkout_date" value="{{ room.checkout_date }}">
                                 <input type="hidden" name="guests" value="{{ room.guests }}">
                                 <input type="hidden" name="total" value="{{ room.total }}">
+                                <input type="hidden" name="image" value="{{ room.image_url }}">
 
-                                <!-- User information fields -->
+                                <!-- Trường thông tin người dùng -->
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Họ và Tên</label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{ request.user.username }}" required readonly>
