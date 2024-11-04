@@ -215,7 +215,7 @@ def add_to_cart(request, room_id):
 
 # Xóa phòng khỏi giỏ hàng
 @login_required
-def remove_from_cart(request, room_id):
+def remove_from_cart(request, room_id,n):
     room = get_object_or_404(Room, id=room_id)
     
     if request.user.is_authenticated:
@@ -230,12 +230,40 @@ def remove_from_cart(request, room_id):
         request.session.modified = True
 
     # Cập nhật trạng thái phòng thành "Sẵn sàng" (state_id = 1)
-    room.state_id = 1
+    if n == 1:
+        room.state_id = 1
+    elif n ==2 :
+        room.state_id = 2
+
     room.save()
 
     messages.info(request, f"Phòng {room.name} đã được xóa khỏi giỏ hàng.")
     return redirect(request.META.get('HTTP_REFERER', '/'))
-# Gửi đơn hàng đặt phòng
+
+# @login_required
+# def state_booking(request, room_id):
+#     room = get_object_or_404(Room, id=room_id)
+    
+#     if request.user.is_authenticated:
+#         # Nếu người dùng đã đăng nhập, xóa item trong giỏ hàng từ cơ sở dữ liệu
+#         CartItem.objects.filter(user=request.user, room_id=room_id).delete()
+#     else:
+#         # Nếu người dùng chưa đăng nhập, xóa item từ session
+#         cart = request.session.get('cart', {})
+#         if str(room_id) in cart:
+#             del cart[str(room_id)]
+#         request.session['cart'] = cart
+#         request.session.modified = True
+
+#     # Cập nhật trạng thái phòng thành "Sẵn sàng" (state_id = 1)
+#     room.state_id = 3
+#     room.save()
+
+#     # messages.info(request, f"Phòng {room.name} đã được xóa khỏi giỏ hàng.")
+#     return redirect(request.META.get('HTTP_REFERER', '/'))
+# # Gửi đơn hàng đặt phòng
+
+
 @login_required
 def submit_order(request):
     if request.method == 'POST':
@@ -277,7 +305,7 @@ def submit_order(request):
         request.session['notifications'].append(notification_message)
 
         # Xóa phòng này khỏi giỏ hàng sau khi đặt
-        remove_from_cart(request, room_id)
+        remove_from_cart(request, room_id,2)
 
         # Lưu thông báo vào session
         request.session.modified = True

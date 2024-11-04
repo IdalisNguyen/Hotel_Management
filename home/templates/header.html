@@ -29,7 +29,7 @@
                     <a class="nav-link" href="{% url 'list_room' %}">Our room</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'food' %}">Gallery</a>
+                    <a class="nav-link" href="{% url 'service' %}">Gallery</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="contact.html">Contact Us</a>
@@ -80,7 +80,7 @@
                                     </div>
                                   </div>
                                   <div>
-                                    <form method="POST" action="{% url 'remove_from_cart' room.id %}">
+                                    <form method="POST" action="{% url 'remove_from_cart' room.id 1 %}">
                                       {% csrf_token %}
                                       <button type="submit" class="btn btn-link p-0 text-danger">
                                         <i class="fas fa-trash-alt"></i>
