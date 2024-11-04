@@ -11,9 +11,13 @@
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm">
                     <div class="row g-0">
-                        <!-- Hình ảnh phòng đã đặt từ bảng Room -->
+                        <!-- Hình ảnh phòng đã đặt từ bảng RoomBooking -->
                         <div class="col-md-4">
-                            <img src="{{ booking.room.image_url }}" alt="Hình ảnh của {{ booking.room }}" class="img-fluid rounded-start" style="height: 100%; width: 100%; object-fit: cover;">
+                            {% if booking.image %}
+                                <img src="{{ booking.image.url }}" alt="Hình ảnh của {{ booking.room }}" class="img-fluid rounded-start" style="height: 100%; width: 100%; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'path/to/default_image.jpg' %}" alt="Hình ảnh không có sẵn" class="img-fluid rounded-start" style="height: 100%; width: 100%; object-fit: cover;">
+                            {% endif %}
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">

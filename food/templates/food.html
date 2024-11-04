@@ -1,425 +1,553 @@
 {% extends "home.html" %}
 {% load static %}
 {% block main_content %}
-<h1>List Đồ ăn</h1>
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- <link  href="{% static 'assets/css/style.css' %}" rel="stylesheet" /> -->
-  </head>
-  <body data-spy="scroll" data-target="#site-navbar" data-offset="200">
- 
-    <section class="site-section">
-      <div class="container">
-        <div class="slideshow-container">
-          <div class="slideshow-wrapper" id="slideshow">
-            <!-- Các slide gốc -->
-            <div class="slide">
-              <img src="{% static 'assets/images/banner_1.png' %}" alt="Banner 1">
-            </div>
-            <div class="slide">
-              <img src="{% static 'assets/images/banner_2.png' %}" alt="Banner 2">
-            </div>
-            <div class="slide">
-              <img src="{% static 'assets/images/banner_3.png' %}" alt="Banner 3">
-            </div>
-    
-            <!-- Slide clone (nối tiếp) -->
-            <div class="slide">
-              <img src="{% static 'assets/images/banner_1.png' %}" alt="Banner 1">
-            </div>
-            <div class="slide">
-              <img src="{% static 'assets/images/banner_2.png' %}" alt="Banner 2">
-            </div>
-            <div class="slide">
-              <img src="{% static 'assets/images/banner_3.png' %}" alt="Banner 3">
-            </div>
-          </div>
-        </div>
+<head>
+        {% comment %} css food {% endcomment %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="short icon" href="{% static 'image/short_icon.png' %}">
+        <link href="{% static 'css/style_food.css' %}" rel="stylesheet" />
+</head>
+
+<!--About-->
+
+<section id="Home">
+
+
+  <div class="main anim">
+
+      <div class="main_text">
+
+          <h1>Get Fresh<span> Food</span><br>in a Easy Way</h1>
+
+          <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Laborum, minus magnam nobis quam impedit nemo quaerat ex 
+              necessitatibus ipsum totam voluptatum, fugit cupiditate 
+              provident, quasi perspiciatis blanditiis illo nesciunt quae. 
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Accusantium odio tenetur laudantium corrupti impedit 
+              quidem dolore beatae, iure labore magni repellendus 
+              inventore, eaque obcaecati commodi ipsa numquam. Accusamus, 
+              molestiae veritatis.
+          </p>
+
+          <a href="#" class="btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+
       </div>
-    </section>    
-    <!-- END section -->
-    
-    <section class="site-section" id="section-menu">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12 text-center mb-5 site-animate">
-            <h2 class="display-4">Delicious Menu</h2>
-            <div class="row justify-content-center">
-              <div class="col-md-7">
-                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+
+      <div class="main_image">
+          <img src="{% static 'image/main_img.png'%}">
+      </div>
+
+  </div>
+
+</section>
+
+
+
+<div class="about">
+  <div class="about_main">
+      <div class="about_image">
+          <img src="{% static 'image/about.png' %}">
+      </div>
+      <div class="about_text">
+          <h3>why food choose us?</h3>
+          <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Itaque recusandae dolore tempora fugiat quisquam illum, 
+              veniam adipisci iusto consequuntur porro explicabo 
+              repudiandae nam quis beatae obcaecati. Magnam provident 
+              fuga aspernatur. Lorem ipsum dolor sit amet consectetur 
+              adipisicing elit. Cum minus facilis placeat sint repellendus 
+              dolorum nostrum, corrupti magni ducimus, et neque nihil enim. 
+              Tempore quia rerum placeat laboriosam, sit quasi!
+          </p>
+          <div class="about_services">
+              <div class="s_1">
+                  <i class="fa-solid fa-truck-fast"></i>
+                  <a href="#">Fast Delivery</a>
               </div>
-            </div>
+              <div class="s_1">
+                  <i class="fa-brands fa-amazon-pay"></i>
+                  <a href="#">Easy Payment</a>
+              </div>
+              <div class="s_1">
+                  <i class="fa-solid fa-headset"></i>
+                  <a href="#">24 x 7 Services</a>
+              </div>
           </div>
+          <a href="#" class="about_btn">
+              <i class="fa-solid fa-burger"></i>Order Now
+          </a>
+      </div>
+  </div>
+</div>
 
-<<<<<<< HEAD
-          <div class="col-md-12 text-center">
-
-            <ul class="nav site-tab-nav nav-pills mb-5" id="pills-tab" role="tablist">
-              <li class="nav-item site-animate">
-                <a class="nav-link active" id="pills-breakfast-tab" data-toggle="pill" href="#pills-breakfast" role="tab" aria-controls="pills-breakfast" aria-selected="true">Breakfast</a>
-              </li>
-              <li class="nav-item site-animate">
-                <a class="nav-link" id="pills-lunch-tab" data-toggle="pill" href="#pills-lunch" role="tab" aria-controls="pills-lunch" aria-selected="false">Lunch</a>
-              </li>
-              <li class="nav-item site-animate">
-                <a class="nav-link" id="pills-dinner-tab" data-toggle="pill" href="#pills-dinner" role="tab" aria-controls="pills-dinner" aria-selected="false">Dinner</a>
-              </li>
-            </ul>
-
-            <div class="tab-content text-left">
-              <div class="tab-pane fade show active" id="pills-breakfast" role="tabpanel" aria-labelledby="pills-breakfast-tab">
-                <div class="row">
-                  <div class="col-md-6 site-animate">
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_1.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Salted Fried Chicken</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$35.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_2.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Italian Sauce Mushroom</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$24.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_3.jpg' %}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Fried Potato w/ Garlic</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$14.50</h6>
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="col-md-6 site-animate">
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_2.jpg' %}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Italian Sauce Mushroom</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$35.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_1.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Salted Fried Chicken</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$12.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_3.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Fried Potato w/ Garlic</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$18.50</h6>
-                      </div>
-                    </div>
-                  </div>
+<!--Menu-->
+{% comment %} <div class="menu">
+  <h1>Our<span>Menu</span></h1>
+  <div class="menu_box">
+      <div class="menu_card">
+          <div class="menu_img">
+              <img src="{% static 'image/menu_1.jpg' %}">
+          </div>
+          <div class="menu_text">
+              <h2>Burger</h2>
+              <p>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+                  Enim, animi nesciunt magni molestiae
+              </p>
+              <div class="menu_icon">
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star-half-stroke"></i>
+              </div>
+              <p class="price">$100.00<sub><del>$120.00</del></sub></p>
+              <a href="#" class="menu_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+          </div>
+      </div>
+      <div class="menu_card">
+          <div class="menu_img">
+              <img src="{% static 'image/menu_2.jpg' %}">
+          </div>
+          <div class="menu_text">
+              <h2>Drink</h2>
+              <p>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+                  Enim, animi nesciunt magni molestiae
+              </p>
+              <div class="menu_icon">
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star-half-stroke"></i>
+              </div>
+              <p class="price">$100.00<sub><del>$120.00</del></sub></p>
+              <a href="#" class="menu_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+          </div>
+      </div>
+      <div class="menu_card">
+          <div class="menu_img">
+              <img src="{% static 'image/menu_3.png' %}">
+          </div>
+          <div class="menu_text">
+              <h2>Pizza</h2>
+              <p>
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
+                  Enim, animi nesciunt magni molestiae
+              </p>
+              <div class="menu_icon">
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star-half-stroke"></i>
+              </div>
+              <p class="price">$100.00<sub><del>$120.00</del></sub></p>
+              <a href="#" class="menu_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+          </div>
+      </div>
+  </div>
+</div> {% endcomment %}
+<!--Menu-->
+<div class="menu">
+    <h1>Our<span>Menu</span></h1>
+    <div class="menu_box">
+        {% for item in food_items %}
+        <div class="menu_card">
+            <div class="menu_img">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                {% else %}
+                    <img src="{% static 'image/default_food.jpg' %}" alt="Default Image">
+                {% endif %}
+            </div>
+            <div class="menu_text">
+                <h2>{{ item.name }}</h2>
+                <p>{{ item.description }}</p>
+                <div class="menu_icon">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star-half-stroke"></i>
                 </div>
-              </div>
-              <div class="tab-pane fade" id="pills-lunch" role="tabpanel" aria-labelledby="pills-lunch-tab">
-                <div class="row">
-                  <div class="col-md-6 site-animate">
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_3.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Fried Potato w/ Garlic</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$14.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_1.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Salted Fried Chicken</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$35.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_2.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Italian Sauce Mushroom</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$24.50</h6>
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="col-md-6 site-animate">
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_3.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Fried Potato w/ Garlic</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$18.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_2.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Italian Sauce Mushroom</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$35.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_1.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Salted Fried Chicken</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$12.50</h6>
-                      </div>
-                    </div>
-
-                    
-                  </div>
-                </div>
-              </div>
-              <div class="tab-pane fade" id="pills-dinner" role="tabpanel" aria-labelledby="pills-dinner-tab">
-                <div class="row">
-                  <div class="col-md-6 site-animate">
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_2.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Italian Sauce Mushroom</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$24.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_1.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Salted Fried Chicken</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$35.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_3.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Fried Potato w/ Garlic</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$14.50</h6>
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="col-md-6 site-animate">
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_3.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Fried Potato w/ Garlic</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$18.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_1.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Italian Sauce Mushroom</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$35.50</h6>
-                      </div>
-                    </div>
-
-                    <div class="media menu-item">
-                      <img class="mr-3" src="{% static 'assets/images/menu_1.jpg'%}" class="img-fluid" alt="Free Template by colorlib.com">
-                      <div class="media-body">
-                        <h5 class="mt-0">Salted Fried Chicken</h5>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                        <h6 class="text-primary menu-price">$12.50</h6>
-                      </div>
-                    </div>
-
-                    
-                  </div>
-                </div>
-              </div>
+                <p class="price">${{ item.price|floatformat:2 }}</p>
+                <a href="#" class="menu_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
             </div>
-
-          </div>
         </div>
+        {% endfor %}
+    </div>
+  </div>
+
+
+
+<!--Banner-->
+<div class="banner">
+  <h1>Special Offer</h1>
+  <div class="banner_center">
+      <h2>50%<br><span>Off</span></h2>
+  </div>
+  <a href="#" class="banner_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+</div>
+
+<!--Gallery-->
+<div class="gallery">
+  <h1>Popular<span>Gallery</span></h1>
+  <div class="gallery_box">
+      <div class="gallery_image">
+          <img src="{% static 'image/gallary_1.jpg' %}">
       </div>
-    </section>
-
-    <!-- <section class="site-section bg-light" id="section-contact">
-      <div class="container">
-        <div class="row">
-
-          <div class="col-md-12 text-center mb-5 site-animate">
-            <h2 class="display-4">Get In Touch</h2>
-            <div class="row justify-content-center">
-              <div class="col-md-7">
-                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-7 mb-5 site-animate">
-            <form action="" method="post">
-              <div class="form-group">
-                <label for="name" class="sr-only">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Name">
-              </div>
-              <div class="form-group">
-                <label for="email" class="sr-only">Email</label>
-                <input type="text" class="form-control" id="email" placeholder="Email">
-              </div>
-              <div class="form-group">
-                <label for="message" class="sr-only">Message</label>
-                <textarea name="message" id="message" cols="30" rows="10" class="form-control" placeholder="Write your message"></textarea>
-              </div>
-              <div class="form-group">
-                <input type="submit" class="btn btn-primary btn-lg" value="Send Message">
-              </div>
-            </form>
-          </div>
-          <div class="col-md-1"></div>
-          <div class="col-md-4 site-animate">
-            <p><img src="{%static 'assets/images/about_img_1.jpg'%}" alt="" class="img-fluid"></p>
-            <p class="text-black">
-              Address: <br> 121 Street, Melbourne Victoria <br> 3000 Australia <br> <br>
-              Phone: <br> 90 987 65 44 <br> <br>
-              Email: <br> <a href="mailto:info@yoursite.com">info@yoursite.com</a>
-            </p>
-
-          </div>
-          
-        </div>
+      <div class="gallery_image">
+          <img src="{% static 'image/gallary_2.jpg' %}">
       </div>
-    </section> -->
-
-    <!-- loader -->
-    <div id="site-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
-      
-    <!-- <div id="map"></div> -->
-    <!-- END section -->    
-
-    <!-- Modal -->
-    <!-- <div class="modal fade" id="reservationModal" tabindex="-1" role="dialog" aria-labelledby="reservationModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="bg-image" style="background-image: url(images/reservation_1.jpg);"></div>
-              </div>
-              <div class="col-lg-12 p-5">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <small>CLOSE </small><span aria-hidden="true">&times;</span>
-                </button>
-                <h1 class="mb-4">Reserve A Table</h1>  
-                <form action="#" method="post">
-                  <div class="row">
-                    <div class="col-md-6 form-group">
-                      <label for="m_fname">First Name</label>
-                      <input type="text" class="form-control" id="m_fname">
-                    </div>
-                    <div class="col-md-6 form-group">
-                      <label for="m_lname">Last Name</label>
-                      <input type="text" class="form-control" id="m_lname">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-12 form-group">
-                      <label for="m_email">Email</label>
-                      <input type="email" class="form-control" id="m_email">
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6 form-group">
-                      <label for="m_people">How Many People</label>
-                      <select name="" id="m_people" class="form-control">
-                        <option value="1">1 People</option>
-                        <option value="2">2 People</option>
-                        <option value="3">3 People</option>
-                        <option value="4+">4+ People</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6 form-group">
-                      <label for="m_phone">Phone</label>
-                      <input type="text" class="form-control" id="m_phone">
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-6 form-group">
-                      <label for="m_date">Date</label>
-                      <input type="text" class="form-control" id="m_date">
-                    </div>
-                    <div class="col-md-6 form-group">
-                      <label for="m_time">Time</label>
-                      <input type="text" class="form-control" id="m_time">
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-12 form-group">
-                      <label for="m_message">Message</label>
-                      <textarea class="form-control" id="m_message" cols="30" rows="7"></textarea>
-                    </div>
-                  </div>
-                  
-                  <div class="row">
-                    <div class="col-md-12 form-group">
-                      <input type="submit" class="btn btn-primary btn-lg btn-block" value="Reserve Now">
-                    </div>
-                  </div>
-
-                </form>
-              </div>
-            </div>
-            
-          </div>
-        </div>
+      <div class="gallery_image">
+          <img src="{% static 'image/gallary_3.webp' %}">
       </div>
-    </div> -->
+  </div>
+</div>
 
-    <!-- END Modal -->
+<!--Offer-->
+<div class="offer">
+  <div class="offer_box">
+      <div class="offer_card_1">
+          <div class="offer_img">
+              <img src="{% static 'image/offer_1.jpg' %}">
+          </div>
+          <div class="offer_tag">
+              <h2>Triple Food</h2>
+              <h1>40%</h1>
+              <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                  Itaque quibusdam quas distinctio sit? Corrupti 
+                  necessitatibus modi nobis?
+              </p>
+              <a href="#" class="offer_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+          </div>
+      </div>
+      <div class="offer_card_2">
+          <div class="offer_img">
+              <img src="{% static 'image/offer_2.png' %}">
+          </div>
+          <div class="offer_tag">
+              <h2>Buy 2 pizzas and get a <br>free Drink</h2>
+              <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                  Itaque quibusdam quas distinctio sit? Corrupti 
+                  necessitatibus modi nobis?
+              </p>
+              <a href="#" class="offer_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+          </div>
+      </div>
+  </div>
+</div>
 
 
-    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
-      <script src="{% static 'assets/js/popper.min.js' %}"></script>
-      <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
-      <script src="{% static 'assets/js/jquery.easing.1.3.js' %}"></script>
-      <script src="{% static 'assets/js/jquery.waypoints.min.js' %}"></script>
-      <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
-      <script src="{% static 'assets/js/jquery.magnific-popup.min.js' %}"></script>
-  
-      <script src="{% static 'assets/js/bootstrap-datepicker.js' %}"></script>
-      <script src="{% static 'assets/js/jquery.timepicker.min.js' %}"></script>
-      
-      <script src="{% static 'assets/js/jquery.animateNumber.min.js' %}"></script>
-      <script src="{% static 'assets/js/main.js' %}"></script>
-    
-  </body> 
 
-=======
->>>>>>> main
+
+<!--Team-->
+
+<div class="team">
+
+  <h1>Our<span>Team</span></h1>
+
+  <div class="team_line_1"></div>
+  <div class="team_line_2"></div>
+
+  <div class="team_box">
+
+      <div class="team_card">
+
+          <div class="team_img">
+              <img src="{% static 'image/team_1.jpg'%}">
+          </div>
+
+          <div class="team_tag">
+
+              <h2>John Deo</h2>
+              <p class="job">Cook</p>
+              <p class="info">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                  Accusantium cupiditate deserunt odio in fugiat dolore! 
+                  Veniam sit quod iusto quas eligendi. Natus numquam 
+                  aspernatur alias illo voluptates dolorem, id ad.
+              </p>
+
+          </div>
+
+      </div>
+
+      <div class="team_card">
+
+          <div class="team_img">
+              <img src="{% static 'image/team_2.jpg'%}">
+          </div>
+
+          <div class="team_tag">
+
+              <h2>John Deo</h2>
+              <p class="job">Cook</p>
+              <p class="info">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                  Accusantium cupiditate deserunt odio in fugiat dolore! 
+                  Veniam sit quod iusto quas eligendi. Natus numquam 
+                  aspernatur alias illo voluptates dolorem, id ad.
+              </p>
+
+          </div>
+
+      </div>
+
+      <div class="team_card">
+
+          <div class="team_img">
+              <img src="{% static 'image/team_3.jpg'%}">
+          </div>
+
+          <div class="team_tag">
+
+              <h2>John Deo</h2>
+              <p class="job">Cook</p>
+              <p class="info">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                  Accusantium cupiditate deserunt odio in fugiat dolore! 
+                  Veniam sit quod iusto quas eligendi. Natus numquam 
+                  aspernatur alias illo voluptates dolorem, id ad.
+              </p>
+
+          </div>
+
+      </div>
+
+      <div class="team_card">
+
+          <div class="team_img">
+              <img src="{% static 'image/team_4.jpg'%}">
+          </div>
+
+          <div class="team_tag">
+
+              <h2>John Deo</h2>
+              <p class="job">Cook</p>
+              <p class="info">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                  Accusantium cupiditate deserunt odio in fugiat dolore! 
+                  Veniam sit quod iusto quas eligendi. Natus numquam 
+                  aspernatur alias illo voluptates dolorem, id ad.
+              </p>
+
+          </div>
+
+      </div>
+
+  </div>
+
+</div>
+
+
+
+
+<!--Blog-->
+
+<div class="blog">
+
+  <h1>Our<span>Blog</span></h1>
+
+  <div class="blog_box">
+
+      <div class="blog_card">
+
+          <div class="blog_img">
+              <img src="{% static 'image/blog_1.jpeg'%}">
+          </div>
+
+          <div class="blog_tag">
+
+              <div class="blog_date">
+                  <p>18 May 2022<i class="fa-solid fa-calendar-days"></i></p>
+              </div>
+
+              <h3 class="blog_heading">
+                  Do Not Leave toko before Eating this remen
+              </h3>
+
+              <p class="blog_text">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+                  Eos rerum commodi fugiat eum assumenda vel cumque eaque 
+                  totam doloribus.
+              </p>
+
+              <hr>
+
+              <div class="view_and_like">
+
+                  <div class="view">
+                      <p>15.3K Views</p>
+                      <p class="b_comm">786 comments</p>
+                  </div>
+
+                  <div class="like">
+                      <p>3K</p>
+                      <i class="fa-regular fa-heart"></i>
+                  </div>
+
+              </div>
+
+          </div>
+
+      </div>
+
+      <div class="blog_card">
+
+          <div class="blog_img">
+              <img src="{% static 'image/blog_2.jpg'%}">
+          </div>
+
+          <div class="blog_tag">
+
+              <div class="blog_date">
+                  <p>18 May 2022<i class="fa-solid fa-calendar-days"></i></p>
+              </div>
+
+              <h3 class="blog_heading">
+                  Do Not Leave toko before Eating this remen
+              </h3>
+
+              <p class="blog_text">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+                  Eos rerum commodi fugiat eum assumenda vel cumque eaque 
+                  totam doloribus.
+              </p>
+
+              <hr>
+
+              <div class="view_and_like">
+
+                  <div class="view">
+                      <p>15.3K Views</p>
+                      <p class="b_comm">786 comments</p>
+                  </div>
+
+                  <div class="like">
+                      <p>3K</p>
+                      <i class="fa-regular fa-heart"></i>
+                  </div>
+
+              </div>
+
+          </div>
+
+      </div>
+
+      <div class="blog_card">
+
+          <div class="blog_img">
+              <img src="{% static 'image/blog_3.jpg'%}">
+          </div>
+
+          <div class="blog_tag">
+
+              <div class="blog_date">
+                  <p>18 May 2022<i class="fa-solid fa-calendar-days"></i></p>
+              </div>
+
+              <h3 class="blog_heading">
+                  Do Not Leave toko before Eating this remen
+              </h3>
+
+              <p class="blog_text">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+                  Eos rerum commodi fugiat eum assumenda vel cumque eaque 
+                  totam doloribus.
+              </p>
+
+              <hr>
+
+              <div class="view_and_like">
+
+                  <div class="view">
+                      <p>15.3K Views</p>
+                      <p class="b_comm">786 comments</p>
+                  </div>
+
+                  <div class="like">
+                      <p>3K</p>
+                      <i class="fa-regular fa-heart"></i>
+                  </div>
+
+              </div>
+
+          </div>
+
+      </div>
+
+  </div>
+
+</div>
+
+
+
+<!--Oder-->
+
+<div class="oder">
+
+  <h1><span>Oder</span>Now</h1>
+
+  <div class="oder_main">
+
+      <div class="oder_img">
+          <img src="{% static 'image/oder.png'%}">
+      </div>
+
+      <div class="oder_form">
+
+          <h2>Home Delivery</h2>
+
+          <div class="oder_list">
+
+              <div class="oder_left">
+
+                  <p>Full Name</p>
+                  <input type="text" placeholder="John Deo">
+
+                  <p>Number</p>
+                  <input type="number" placeholder="+94 12 345 6789">
+
+                  <p>Extra food</p>
+                  <input type="text" placeholder="with cola">
+
+                  <p>You Address</p>
+                  <textarea placeholder="Enter You Address"></textarea>
+
+              </div>
+
+              <div class="oder_right">
+
+                  <p>Email</p>
+                  <input type="email" placeholder="johndeo123@gmail.com">
+
+                  <p>Food Name</p>
+                  <input type="text" placeholder="Pizza">
+
+                  <p>How Much</p>
+                  <input type="number" placeholder="3">
+
+                  <p>You Message</p>
+                  <textarea placeholder="Enter Your Message"></textarea>
+
+              </div>
+
+          </div>
+
+          <a href="#" class="oder_btn"><i class="fa-solid fa-burger"></i>Oder Now</a>
+
+      </div>
+
+  </div>
+
+</div>
+
 {% endblock main_content %}
