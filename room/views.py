@@ -5,6 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from datetime import datetime 
 from django.utils import timezone
+from service.models import FoodOrder  # Import đúng model FoodOrder từ ứng dụng service
 
 # Xem chi tiết phòng
 def room_details_view(request, room_id):
@@ -148,8 +149,14 @@ def add_to_cart(request, room_id):
     room = get_object_or_404(Room, id=room_id)
 
     # Kiểm tra trạng thái phòng
-    if room.state_id == 2:
+    if room.state_id == 2 :
         notification_message = f'Không thể thêm {room.name} vì trạng thái không sẵn sàng!'
+        request.session['notifications'] = request.session.get('notifications', [])
+        request.session['notifications'].append(notification_message)
+        messages.error(request, f"Phòng {room.name} hiện không khả dụng để đặt. Vui lòng chọn phòng khác.")
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    if room.state_id == 3:
+        notification_message = f'Không thể thêm {room.name} vì trạng thái đang được đặt!'
         request.session['notifications'] = request.session.get('notifications', [])
         request.session['notifications'].append(notification_message)
         messages.error(request, f"Phòng {room.name} hiện không khả dụng để đặt. Vui lòng chọn phòng khác.")
@@ -215,7 +222,7 @@ def add_to_cart(request, room_id):
 
 # Xóa phòng khỏi giỏ hàng
 @login_required
-def remove_from_cart(request, room_id):
+def remove_from_cart(request, room_id,n):
     room = get_object_or_404(Room, id=room_id)
     
     if request.user.is_authenticated:
@@ -230,12 +237,42 @@ def remove_from_cart(request, room_id):
         request.session.modified = True
 
     # Cập nhật trạng thái phòng thành "Sẵn sàng" (state_id = 1)
-    room.state_id = 1
+    if n == 1:
+        room.state_id = 1
+    elif n == 2 :
+        room.state_id = 2
+    elif n == 3 :
+        room.state_id = 3
+
     room.save()
 
     messages.info(request, f"Phòng {room.name} đã được xóa khỏi giỏ hàng.")
     return redirect(request.META.get('HTTP_REFERER', '/'))
-# Gửi đơn hàng đặt phòng
+
+# @login_required
+# def state_booking(request, room_id):
+#     room = get_object_or_404(Room, id=room_id)
+    
+#     if request.user.is_authenticated:
+#         # Nếu người dùng đã đăng nhập, xóa item trong giỏ hàng từ cơ sở dữ liệu
+#         CartItem.objects.filter(user=request.user, room_id=room_id).delete()
+#     else:
+#         # Nếu người dùng chưa đăng nhập, xóa item từ session
+#         cart = request.session.get('cart', {})
+#         if str(room_id) in cart:
+#             del cart[str(room_id)]
+#         request.session['cart'] = cart
+#         request.session.modified = True
+
+#     # Cập nhật trạng thái phòng thành "Sẵn sàng" (state_id = 1)
+#     room.state_id = 3
+#     room.save()
+
+#     # messages.info(request, f"Phòng {room.name} đã được xóa khỏi giỏ hàng.")
+#     return redirect(request.META.get('HTTP_REFERER', '/'))
+# # Gửi đơn hàng đặt phòng
+
+
 @login_required
 def submit_order(request):
     if request.method == 'POST':
@@ -277,7 +314,7 @@ def submit_order(request):
         request.session['notifications'].append(notification_message)
 
         # Xóa phòng này khỏi giỏ hàng sau khi đặt
-        remove_from_cart(request, room_id)
+        remove_from_cart(request, room_id,3)
 
         # Lưu thông báo vào session
         request.session.modified = True
@@ -296,3 +333,17 @@ def room_booked(request):
     
     # Truyền thông tin phòng đã đặt vào template
     return render(request, "room_booked.html", {"bookings": bookings})
+
+
+def room_booking_detail(request, booking_id):
+    # Lấy thông tin đặt phòng
+    booking = get_object_or_404(RoomBooking, id=booking_id)
+    
+    # Lấy tất cả các đơn đặt đồ ăn liên quan đến RoomBooking này
+    food_orders = booking.food_orders.all()  # Sử dụng related_name='food_orders' để truy cập các FoodOrder liên quan
+    
+    # Truyền booking và food_orders vào template
+    return render(request, 'room_booked_details.html', {
+        'booking': booking,
+        'food_orders': food_orders,
+    })

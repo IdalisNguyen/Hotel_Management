@@ -26,11 +26,11 @@
                     <a class="nav-link" href="index.html">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'list_room' %}">Our room</a>
+                    <a class="nav-link" href="{% url 'room:list_room' %}">Our room</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="gallery.html">Gallery</a>
-                  </li>
+                  {% comment %} <li class="nav-item">
+                    <a class="nav-link" href="{% url 'service' %}">Gallery</a>
+                  </li> {% endcomment %}
                   <li class="nav-item">
                     <a class="nav-link" href="contact.html">Contact Us</a>
                   </li>
@@ -50,14 +50,14 @@
                       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <p>User is logged in: {{ user.username }}</p>
                         <a class="dropdown-item" href="#">Profile</a>
-                        <a class="dropdown-item" href="{% url "room_booked" %}">Orders</a>
+                        <a class="dropdown-item" href="{% url "room:room_booked" %}">Orders</a>
                         <a class="dropdown-item" href="{% url 'login' %}">Logout</a> <!-- Đăng xuất -->
                       </div>
                     </li>
 
                     <!-- Biểu tượng giỏ hàng -->
                     <li class="nav-item dropdown">
-                      <a class="nav-link d-flex align-items-center" href="{% url 'list_room' %}" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <a class="nav-link d-flex align-items-center" href="{% url 'room:list_room' %}" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <div class="position-relative">
                           <i class="fas fa-shopping-cart" style="font-size: 24px;"></i>
                           <!-- Hiển thị số lượng phòng trong badge -->
@@ -70,7 +70,7 @@
                         <div id="cart-content">
                           {% if cart.cart_items %}
                             {% for room in cart.cart_items %}
-                              <a href="{% url 'list_room' %}" class="text-decoration-none text-dark">
+                              <a href="{% url 'room:list_room' %}" class="text-decoration-none text-dark">
                                 <div class="d-flex justify-content-between mb-3">
                                   <div class="d-flex align-items-center">
                                     <img src="{{ room.image_url}}" alt="{{ room.name }}" class="rounded" width="60" height="60" />
@@ -80,7 +80,7 @@
                                     </div>
                                   </div>
                                   <div>
-                                    <form method="POST" action="{% url 'remove_from_cart' room.id %}">
+                                    <form method="POST" action="{% url 'room:remove_from_cart' room.id 1 %}">
                                       {% csrf_token %}
                                       <button type="submit" class="btn btn-link p-0 text-danger">
                                         <i class="fas fa-trash-alt"></i>
@@ -119,7 +119,7 @@
                             {% endif %}
                           {% endfor %}
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="{% url 'clear_notifications' %}">Xóa tất cả thông báo</a>
+                          <a class="dropdown-item" href="{% url 'room:clear_notifications' %}">Xóa tất cả thông báo</a>
                         </div>
                       </li>
                     {% else %}
