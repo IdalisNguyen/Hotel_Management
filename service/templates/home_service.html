@@ -156,7 +156,7 @@
 <div class="menu">
     <h1>Our<span>Menu</span></h1>
     <div class="menu_box">
-        {% for item in food_items %}
+        {% for item in food_items|slice:":3" %}  <!-- Chỉ lấy 3 món ăn đầu tiên -->
         <div class="menu_card">
             <div class="menu_img">
                 {% if item.image %}
@@ -168,21 +168,17 @@
             <div class="menu_text">
                 <h2>{{ item.name }}</h2>
                 <p>{{ item.description }}</p>
-                <div class="menu_icon">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star-half-stroke"></i>
-                </div>
                 <p class="price">${{ item.price|floatformat:2 }}</p>
-                <a href="#" class="menu_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+                
+                <!-- Nút Order Now với URL chứa cả roombooking_id và food_id -->
+                <a href="{% url 'service:order_food' roombooking_id=roombooking_id food_id=item.id %}" class="menu_btn">
+                    <i class="fa-solid fa-burger"></i>Order Now
+                </a>
             </div>
         </div>
         {% endfor %}
     </div>
-  </div>
-
+</div>
 
 
 <!--Banner-->
@@ -211,7 +207,7 @@
 </div>
 
 <!--Offer-->
-<div class="offer">
+{% comment %} <div class="offer">
   <div class="offer_box">
       <div class="offer_card_1">
           <div class="offer_img">
@@ -244,8 +240,44 @@
       </div>
   </div>
 </div>
-
-
+ {% endcomment %}
+<!--Offer-->
+<div class="offer">
+    <div class="offer_box">
+        <!-- Buffet Offer -->
+        {% for item in food_items %}
+        {% if item.category.name == "Buffet" %}
+        <div class="offer_card_1">
+            <div class="offer_img">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            </div>
+            <div class="offer_tag">
+                <h2>{{ item.name }}</h2>
+                <h1>40%</h1> <!-- Bạn có thể điều chỉnh giảm giá nếu cần -->
+                <p>{{ item.description }}</p>
+                <a href="#" class="offer_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+  
+        <!-- Family Meal Offer -->
+        {% for item in food_items %}
+        {% if item.category.name == "Buổi cơm gia đình" %}
+        <div class="offer_card_2">
+            <div class="offer_img">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+            </div>
+            <div class="offer_tag">
+                <h2>{{ item.name }}</h2>
+                <p>{{ item.description }}</p>
+                <a href="{% url 'service:order_food' roombooking_id=roombooking_id food_id=item.id %}" class="offer_btn"><i class="fa-solid fa-burger"></i>Order Now</a>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+  </div>
 
 
 <!--Team-->
@@ -354,8 +386,8 @@
 
 <div class="blog">
 
-  <h1>Our<span>Blog</span></h1>
-
+  <h1>Phương thức<span>Di chuyển</span></h1>
+{% comment %} 
   <div class="blog_box">
 
       <div class="blog_card">
@@ -484,8 +516,53 @@
 
       </div>
 
-  </div>
+  </div> {% endcomment %}
 
+  <div class="blog_box">
+    {% for vehicle in vehicles %}  <!-- Lặp qua danh sách xe -->
+    <div class="blog_card">
+        <div class="blog_img">
+            <img src="{% if vehicle.image %}{{ vehicle.image.url }}{% else %}{% static 'image/default_vehicle.jpg' %}{% endif %}" alt="{{ vehicle.type }}">
+        </div>
+
+        <div class="blog_tag">
+            <div class="blog_date">
+                <p>{{ vehicle.license_plate }}<i class="fa-solid fa-calendar-days" onclick="toggleDatePicker(this)"></i></p>
+            </div>
+
+            <h3 class="blog_heading">
+                {{ vehicle.type }} - Giá thuê: ${{ vehicle.daily_rate|floatformat:2 }}
+            </h3>
+
+            <p class="blog_text">
+                {{ vehicle.description }}
+            </p>
+
+            <hr>
+
+            <div class="view_and_like">
+                <div class="view">
+                    <p>Available: {{ vehicle.available|yesno:"Yes,No" }}</p>
+                </div>
+                <div class="like">
+                    <p>Rating: <i class="fa-solid fa-star"></i> 4.5</p> <!-- Giả định có rating -->
+                </div>
+            </div>
+
+            <!-- Form chọn ngày -->
+            <div class="date-picker" style="display: none;">
+                <label for="rental_date">Chọn ngày nhận xe:</label>
+                <input type="date" id="rental_date" name="rental_date" class="date-input">
+                
+                <label for="return_date">Chọn ngày trả xe:</label>
+                <input type="date" id="return_date" name="return_date" class="date-input">
+                
+                <button type="button" class="offer_btn_vehicle">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 </div>
 
 
@@ -549,5 +626,65 @@
   </div>
 
 </div>
+<script>
+    function toggleDatePicker(element) {
+        // Lấy phần tử cha của biểu tượng để tìm date-picker
+        var datePicker = element.closest('.blog_tag').querySelector('.date-picker');
+        // Chuyển đổi hiển thị giữa block và none
+        if (datePicker.style.display === "none" || datePicker.style.display === "") {
+            datePicker.style.display = "block"; // Hiển thị date-picker
+        } else {
+            datePicker.style.display = "none"; // Ẩn date-picker
+        }
+    }
+</script>
 
+<style>
+
+    .date-picker {
+        margin-top: 15px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .date-picker label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .date-input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+    
+    .date-input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+    
+    .offer_btn_vehicle {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+    
+    .offer_btn_vehicle:hover {
+        background-color: #0056b3;
+    } 
+</style>
 {% endblock main_content %}

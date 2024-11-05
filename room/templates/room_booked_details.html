@@ -1,0 +1,160 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block main_content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Chi tiết Đặt Phòng</h1>
+
+    <div class="row">
+        <!-- Thông tin chung của khách sạn và phòng -->
+        <div class="col-md-8">
+            <div class="card shadow-lg mb-4 border-0 rounded">
+                <div class="card-body">
+                    <h3 class="card-title fw-bold">{{ booking.room.name }}</h3>
+                    <p class="text-muted">{{ booking.room.type.name }} - {{ booking.room.state.name }}</p>
+                    <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i>TP Buôn Ma Thuột, Vietnam</p>
+                    <hr>
+
+                    <p class="card-text">{{ booking.room.description }}</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <img src="{{ booking.room.image.url }}" class="img-thumbnail rounded mb-2" alt="Ảnh phòng 1">
+                            <img src="{{ booking.room.image.url }}" class="img-thumbnail rounded mb-2" alt="Ảnh phòng 2">
+                            <img src="{{ booking.room.image.url }}" class="img-thumbnail rounded mb-2" alt="Ảnh phòng 3">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="main-image position-relative">
+                                <img src="{{ booking.room.image.url }}" class="img-fluid rounded" alt="Ảnh chính của phòng">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3">SALE!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- Thông tin các đơn đặt đồ ăn -->
+            <div class="card shadow-lg mb-4 border-0 rounded">
+                <div class="card-body">
+                    <h5 class="text-primary fw-bold">Lịch sử đặt dịch vụ</h5>
+                    {% if food_orders %}
+                        <ul class="list-group">
+                            {% for order in food_orders %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Món: </strong>{{ order.food_item.name }}<br>
+                                        <strong>Số lượng: </strong>{{ order.quantity }}<br>
+                                        <strong>Ghi chú: </strong>{{ order.special_instructions|default:"Không có" }}<br>
+                                        <strong>Thời gian đặt: </strong>{{ order.order_time|date:"d/m/Y H:i" }}
+                                    </div>
+                                    <div>
+                                        <img src="{{ order.food_item.image.url }}" alt="{{ order.food_item.name }}" class="img-thumbnail" style="max-width: 100px;">
+                                    </div>
+                                    <span class="badge badge-primary badge-pill">{{ order.total_price }} Đ</span>
+
+                                    {% comment %} <a href="{% url 'service:delete_food_order' roombooking_id=booking.id order_id=order.id %}" class="btn btn-danger btn-sm ml-2">
+                                        Xóa
+                                    </a> {% endcomment %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Không có dịch vụ nào.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Thông tin đặt phòng -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded">
+                <div class="card-body">
+                    <h5 class="text-primary fw-bold">Thông Tin Đặt Phòng</h5>
+                    <div class="mb-3">
+                        <strong>Người đặt:</strong>
+                        <span class="text-muted">{{ booking.user.username }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Ngày bắt đầu:</strong>
+                        <span class="text-muted">{{ booking.date_start|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Ngày kết thúc:</strong>
+                        <span class="text-muted">{{ booking.date_end|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Số điện thoại:</strong>
+                        <span class="text-muted">{{ booking.phone }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Email:</strong>
+                        <span class="text-muted">{{ booking.email }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Tin nhắn:</strong>
+                        <span class="text-muted">{{ booking.message|default:"Không có" }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Số khách:</strong>
+                        <span class="text-muted">{{ booking.guests }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong class="fw-bold">Tổng tiền:</strong>
+                        <span class="fw-bold text-primary">{{ booking.subtotal }} Đ</span>
+                    </div>
+                    <!-- Nút đặt dịch vụ -->
+                    <div class="text-center mt-4">
+                        <a href="{% url 'service:service' booking.id %}" class="btn btn-primary fw-bold px-4 py-2">Đặt Dịch Vụ</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .main-image {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+    .main-image img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .badge.bg-danger {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .img-thumbnail {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .card-body .text-muted {
+        font-size: 0.9rem;
+    }
+
+    .fw-bold.text-primary {
+        font-size: 1.25rem;
+    }
+</style>
+
+{% endblock main_content %}
