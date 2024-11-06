@@ -80,6 +80,10 @@
                                     <input type="email" class="form-control" id="email" name="email" value="{{ request.user.email }}" required readonly>
                                 </div>
                                 <div class="mb-3">
+                                    <label for="number" class="form-label">Căn cước công dân</label>
+                                    <input type="number" class="form-control" id="idd_card" name="idd_card" value="" >
+                                </div>
+                                <div class="mb-3">
                                     <label for="phone" class="form-label">Số Điện Thoại</label>
                                     <input type="tel" class="form-control" id="phone" name="phone" value="{{ request.user.userprofile.phone }}" required>
                                 </div>

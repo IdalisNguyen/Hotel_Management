@@ -42,6 +42,8 @@ class RoomBooking(models.Model):
     guests = models.IntegerField(default=1)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     image = models.ImageField(upload_to='booking_images/', blank=True, null=True)  # Thêm trường image cho RoomBooking
+    identity_card = models.CharField(max_length=12, blank=True, null=True)
+
 
     def save(self, *args, **kwargs):
         # Auto-assign email from user if not provided

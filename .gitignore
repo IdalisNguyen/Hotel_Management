@@ -19,7 +19,7 @@ db.sqlite3
 clear
 
 # edit setting
-hotel_management/settings.py
+# hotel_management/settings.py
 
 # Ignore the local settings file
 local_settings.py
