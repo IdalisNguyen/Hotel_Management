@@ -54,7 +54,7 @@
                                     {% if user.is_authenticated %}
                                         <a href="{% url 'room:book_room' %}">Book Now</a>
                                     {% else %}
-                                        <a href="{% url 'login' %}?next={% url 'book_room' %}">Book Now</a>
+                                        <a href="{% url 'login' %}?next={% url 'room:book_room' %}">Book Now</a>
                                     {% endif %}
                                 </button>
                               </div>

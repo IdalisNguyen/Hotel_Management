@@ -202,7 +202,6 @@ def add_to_cart(request, room_id):
         request.session.modified = True
 
     # Cập nhật trạng thái phòng thành "Không sẵn sàng" (state_id = 2)
-    room.state_id = 2
     room.save()
 
     # Kiểm tra nếu request là AJAX
@@ -286,6 +285,7 @@ def submit_order(request):
         checkout_date_str = request.POST.get('checkout_date')
         guests = int(request.POST.get('guests', 1))  # Mặc định là 1 khách nếu không có
         subtotal = float(request.POST.get('total', 0.0))  # Mặc định subtotal nếu không có
+        idd_card = int(request.POST.get('idd_card'))
             
         # Chuyển đổi ngày checkin và checkout sang định dạng datetime hợp lệ
         checkin_date = datetime.strptime(checkin_date_str, '%b. %d, %Y')  # Ví dụ định dạng: 'Oct. 30, 2024'
@@ -304,7 +304,8 @@ def submit_order(request):
             email=email,
             guests=guests,
             subtotal=subtotal,
-            image=room.image
+            image=room.image,
+            identity_card=idd_card
             
         )
 
