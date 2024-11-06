@@ -56,14 +56,14 @@
 
               <!-- Trường Ngày Check In -->
               <div class="mb-3">
-                  <label class="form-label">Check In</label>
-                  <input class="form-control" type="date" id="checkin-date" name="checkin" required/>
+                <label class="form-label">Check In</label>
+                <input class="form-control" type="date" id="checkin-date" name="checkin" required/>
               </div>
               
               <!-- Trường Ngày Check Out -->
               <div class="mb-3">
-                  <label class="form-label">Check Out</label>
-                  <input class="form-control" type="date" id="checkout-date" name="checkout" required/>
+                <label class="form-label">Check Out</label>
+                <input class="form-control" type="date" id="checkout-date" name="checkout" required/>
               </div>
   
               <!-- Trường Chọn Số Khách -->
@@ -110,6 +110,54 @@
   
   </div>
   <script>
+      // Booked dates passed from Django view as a JSON array
+      const bookedDates = {{ booked_dates|safe }}; // Example: ["06/11/2024", "07/11/2024", ...]
+
+      const checkinDateInput = document.getElementById('checkin-date');
+      const checkoutDateInput = document.getElementById('checkout-date');
+  
+      // Function to format a date as dd/mm/yyyy
+      function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+  
+      // Function to check if a date is booked
+      function isDateBooked(dateStr) {
+        return bookedDates.includes(dateStr);
+      }
+  
+      // Event listener to disable booked dates in Check-In field
+      checkinDateInput.addEventListener('input', function() {
+        const selectedDate = new Date(this.value);
+        const formattedDate = formatDate(selectedDate);
+  
+        // Disable the selected date if it's booked
+        if (isDateBooked(formattedDate)) {
+          alert(`Ngày này đang được đặt từ các ngày: ${bookedDates.join(', ')}. Vui lòng chọn ngày khác.`);
+          this.value = ''; // Clear the invalid date
+        } else {
+          // Set the minimum checkout date to one day after the selected check-in date
+          const minCheckoutDate = new Date(selectedDate);
+          minCheckoutDate.setDate(minCheckoutDate.getDate() + 1);
+          checkoutDateInput.min = minCheckoutDate.toISOString().split('T')[0];
+        }
+      });
+  
+      // Event listener to validate the selected Check-Out date
+      checkoutDateInput.addEventListener('input', function() {
+        const selectedDate = new Date(this.value);
+        const formattedDate = formatDate(selectedDate);
+  
+        // Disable the selected date if it's booked
+        if (isDateBooked(formattedDate)) {
+          alert(`Ngày này đang được đặt từ các ngày: ${bookedDates.join(', ')}. Vui lòng chọn ngày khác.`);
+          this.value = ''; // Clear the invalid date
+        }
+      });
+
     const roomPrice = {{ room.price }};
 
     function addToCart(roomId) {
@@ -145,6 +193,9 @@
           alert('Đã xảy ra lỗi, vui lòng kiểm tra kết nối và thử lại.');
       });
   }
+
+
+  
   
   function updateCartIcon(cartCount, totalPrice) {
       // Cập nhật số lượng trên biểu tượng giỏ hàng
@@ -189,7 +240,7 @@
         <button class="btn btn-light px-2">-</button>
         <input type="text" value="1" class="text-center border-0" style="width: 40px;">
         <button class="btn btn-light px-2">+</button>
-      </div>
+      </div>  
       <button class="select-button btn btn-success">CHỌN</button>
     </div>
   </div>
