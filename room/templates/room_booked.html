@@ -3,7 +3,75 @@
 
 {% block main_content %}
 
-room booked
+<div class="container mt-5">
+    <h1 class="text-center mb-5">Danh sách phòng đã đặt</h1>
+
+    <div class="row">
+        {% for booking in bookings %}
+            <div class="col-md-6 mb-4">
+                <!-- Thẻ <a> bao quanh <div> để chuyển đến URL chi tiết phòng -->
+                <a href="{% url 'room:room_booking_detail' booking.id %}" style="text-decoration: none; color: inherit;">
+                    <div class="card shadow-sm">
+                        <div class="row g-0">
+                            <!-- Hình ảnh phòng đã đặt từ bảng RoomBooking -->
+                            <div class="col-md-4">
+                                {% if booking.image %}
+                                    <img src="{{ booking.image.url }}" alt="Hình ảnh của {{ booking.room }}" class="img-fluid rounded-start" style="height: 100%; width: 100%; object-fit: cover;">
+                                {% else %}
+                                    <img src="{% static 'path/to/default_image.jpg' %}" alt="Hình ảnh không có sẵn" class="img-fluid rounded-start" style="height: 100%; width: 100%; object-fit: cover;">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ booking.room }}</h5>
+                                    <h6 class="card-subtitle mb-3 text-muted">Người đặt: {{ booking.user }}</h6>
+
+                                    <table class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Ngày bắt đầu:</strong></td>
+                                                <td>{{ booking.date_start|date:"d/m/Y H:i" }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Ngày kết thúc:</strong></td>
+                                                <td>{{ booking.date_end|date:"d/m/Y H:i" }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Số điện thoại:</strong></td>
+                                                <td>{{ booking.phone }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Email:</strong></td>
+                                                <td>{{ booking.email }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Tin nhắn:</strong></td>
+                                                <td>{{ booking.message|default:"Không có" }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Số khách:</strong></td>
+                                                <td>{{ booking.guests }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Tổng tiền:</strong></td>
+                                                <td>{{ booking.subtotal }} Đ</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    Không có phòng nào đã được đặt.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock main_content %}
-

@@ -32,20 +32,26 @@ class Room(models.Model):
     
 
 class RoomBooking(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True, default=2)
-    room = models.ForeignKey('Room', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, default=2)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date_start = models.DateTimeField()
     date_end = models.DateTimeField()
-    phone = models.CharField(max_length=15, blank=True, null=True)  # Optional phone number
-    email = models.EmailField()  # Required email field
-    message = models.TextField(blank=True, null=True)  # Optional message
-    guests = models.IntegerField(default=1)  # Number of guests
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Subtotal price for the booking
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    email = models.EmailField()
+    message = models.TextField(blank=True, null=True)
+    guests = models.IntegerField(default=1)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    image = models.ImageField(upload_to='booking_images/', blank=True, null=True)  # Thêm trường image cho RoomBooking
+    identity_card = models.CharField(max_length=12, blank=True, null=True)
+
 
     def save(self, *args, **kwargs):
         # Auto-assign email from user if not provided
         if self.user and not self.email:
             self.email = self.user.email
+        # Auto-assign image from Room if not provided
+        if not self.image and self.room.image:
+            self.image = self.room.image
         super().save(*args, **kwargs)
 
     def __str__(self):
