@@ -51,7 +51,7 @@ def room_details_view(request, room_id):
     room.save()
 
     # Print booked dates for debugging
-    print("Booked dates:", booked_dates)
+    # print("Booked dates:", booked_dates)
 
     # Pass the room and booked dates to the template context
     context = {
