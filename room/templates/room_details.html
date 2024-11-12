@@ -32,7 +32,7 @@
                  <img src="{{ room.image.url }}" class="img-thumbnail" alt="Thumbnail 1">
               </div>
               <div class="thumbnail mb-2 shadow-sm rounded">
-                 <img src="{{ room.image.url }}" class="img-thumbnail" alt="Thumbnail 2">
+                 <img src="{{ room.image.url }}" class="img-thumbnail" alt="Thumbnail 2"> 
               </div>
               <div class="thumbnail mb-2 shadow-sm rounded">
                  <img src="{{ room.image.url }}" class="img-thumbnail" alt="Thumbnail 3">
@@ -41,7 +41,7 @@
            <div class="col-md-10">
               <div class="position-relative main-image shadow rounded">
                  <img src="{{ room.image.url }}" class="img-fluid rounded" alt="Main room image">
-                 <div class="badge bg-danger position-absolute top-0 start-0 m-3">SALE!</div>
+                 <div class="badge bg-danger position-absolute top-0 start-0 m-3">{{room.state}}</div>
               </div>
            </div>
         </div>

@@ -31,7 +31,7 @@
                     <div class="contact-form">
 
                         <div role="form" class="wpcf7" id="" lang="en-US" dir="ltr">
-                <form action="{% url 'book_room' %}" method="POST" class="wpcf7-form" novalidate="novalidate">
+                <form action="{% url 'room:book_room' %}" method="POST" class="wpcf7-form" novalidate="novalidate">
                 {% csrf_token %}
                 </div>
                 <div class="half-width-wrap">
