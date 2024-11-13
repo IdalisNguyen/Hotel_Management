@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from room.models import Room, RoomBooking, CartItem
+from room.models import Room, RoomBooking, CartItem, RoomState
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from datetime import datetime 
@@ -20,7 +20,7 @@ def room_details_view(request, room_id):
     # Retrieve bookings for the specified room
     bookings = RoomBooking.objects.filter(room=room)
 
-    # Collect all booked dates for this room in YYYY-MM-DD format
+#     # Collect all booked dates for this room in DD/MM/YYYY format
     booked_dates = []
     for booking in bookings:
         current_date = booking.date_start.date()  # Start date as a date object
@@ -31,13 +31,32 @@ def room_details_view(request, room_id):
             booked_dates.append(current_date.strftime('%d/%m/%Y'))
             current_date += timedelta(days=1)
 
+#     # Check today's date
+#     today = datetime.now().date()
+#     today_formatted = today.strftime('%d/%m/%Y')
+
+#     # Retrieve RoomState instances based on IDs
+#     state_available = get_object_or_404(RoomState, id=1)  # 1 = Sẵn sàng
+#     state_booked = get_object_or_404(RoomState, id=3)    # 3 = Đang được đặt
+#     # print(booked_dates)
+#     # Update room state based on today's booking status
+#     if today_formatted in booked_dates:
+#         room.state = state_booked  # Assign the RoomState instance for "Currently Booked"
+#         # print(state_booked)
+#     else:
+#         room.state = state_available  # Assign the RoomState instance for "Available"
+# #        print(state_available)
+    
+    # Save updated room state to the database
+    room.save()
+
     # Print booked dates for debugging
-    print("Booked dates:", booked_dates)
+    # print("Booked dates:", booked_dates)
 
     # Pass the room and booked dates to the template context
     context = {
         'room': room,
-        'booked_dates': booked_dates,  # Pass booked dates in 'YYYY-MM-DD' format
+        'booked_dates': booked_dates,  # Pass booked dates in 'DD/MM/YYYY' format
     }
     return render(request, 'room_details.html', context)
 # Hiển thị danh sách phòng và giỏ hàng
@@ -298,23 +317,44 @@ def submit_order(request):
         user = request.user
         phone = request.POST.get('phone')
         email = request.POST.get('email')
-        
-        # Lấy dữ liệu phòng cụ thể từ form đã gửi
+
+        # Retrieve specific room data from the submitted form
         room_id = request.POST.get('room_id')
         checkin_date_str = request.POST.get('checkin_date')
         checkout_date_str = request.POST.get('checkout_date')
-        guests = int(request.POST.get('guests', 1))  # Mặc định là 1 khách nếu không có
-        subtotal = float(request.POST.get('total', 0.0))  # Mặc định subtotal nếu không có
+        guests = int(request.POST.get('guests', 1))  # Default to 1 guest if not provided
+        subtotal = float(request.POST.get('total', 0.0))  # Default subtotal if not provided
         idd_card = int(request.POST.get('idd_card'))
-            
-        # Chuyển đổi ngày checkin và checkout sang định dạng datetime hợp lệ
-        checkin_date = datetime.strptime(checkin_date_str, '%b. %d, %Y')  # Ví dụ định dạng: 'Oct. 30, 2024'
+
+        # Convert check-in and check-out dates to valid datetime format
+        checkin_date = datetime.strptime(checkin_date_str, '%b. %d, %Y')  # Example format: 'Oct. 30, 2024'
         checkout_date = datetime.strptime(checkout_date_str, '%b. %d, %Y')
 
-        # Lấy phòng và đảm bảo phòng tồn tại
+        # Get the room and ensure it exists
         room = get_object_or_404(Room, id=room_id)
+        bookings = RoomBooking.objects.filter(room=room)
 
-        # Tạo đơn đặt cho phòng cụ thể này
+        # Collect all booked dates for this room in DD/MM/YYYY format
+        booked_dates = set()  # Use a set for faster lookups
+        for booking in bookings:
+            current_date = booking.date_start.date()
+            end_date = booking.date_end.date()
+            while current_date <= end_date:
+                booked_dates.add(current_date.strftime('%d/%m/%Y'))
+                current_date += timedelta(days=1)
+
+        # Check if requested dates overlap with booked dates
+        current_date = checkin_date
+        while current_date <= checkout_date:
+            if current_date.strftime('%d/%m/%Y') in booked_dates:
+                notification_message = f'Không thể thêm {room.name} vì đang được đặt!'
+                request.session['notifications'] = request.session.get('notifications', [])
+                request.session['notifications'].append(notification_message)
+                messages.error(request, f"Phòng {room.name} hiện không khả dụng để đặt. Vui lòng chọn phòng khác.")
+                return redirect(request.META.get('HTTP_REFERER', '/'))  # Redirect to the previous page
+            current_date += timedelta(days=1)
+
+        # If dates are available, create the booking
         booking = RoomBooking.objects.create(
             user=user,
             room=room,
@@ -326,25 +366,27 @@ def submit_order(request):
             subtotal=subtotal,
             image=room.image,
             identity_card=idd_card
-            
         )
 
-        # Thêm thông báo cho phòng đã đặt
+        # Add a notification for the booked room
         notification_message = f'Phòng {room.name} đã được đặt thành công từ {checkin_date_str} đến {checkout_date_str}!'
         request.session['notifications'] = request.session.get('notifications', [])
         request.session['notifications'].append(notification_message)
 
-        # Xóa phòng này khỏi giỏ hàng sau khi đặt
-        remove_from_cart(request, room_id,1)
+        # Update the room state
+        # room.state = 3  # Assuming 3 indicates booked
+        room.save()
 
-        # Lưu thông báo vào session
+        # Remove the room from the cart after booking
+        remove_from_cart(request, room_id, 1)
+
+        # Save notifications in session
         request.session.modified = True
         messages.success(request, "Your booking has been confirmed!")
 
-        return redirect('home')  # Điều hướng về trang chủ hoặc trang xác nhận đặt phòng
+        return redirect('home')  # Redirect to home or booking confirmation page
 
-    return redirect('cart')  # Điều hướng về giỏ hàng nếu yêu cầu không phải là POST
-
+    return redirect('cart')  # Redirect to cart if the request is not POST
 
 # Xác nhận đặt phòng
 @login_required  # đảm bảo chỉ người dùng đã đăng nhập mới có thể truy cập
