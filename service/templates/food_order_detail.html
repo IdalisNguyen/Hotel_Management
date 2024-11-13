@@ -1,0 +1,117 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block main_content %}    
+    <div class="container_f">
+        <h1>Chi tiết đặt món: <b style="color: #f42d00;">{{ food_item.name }}</b></h1>
+        
+        <div class="food-detail">
+            <div class="food-image">
+                {% if food_item.image %}
+                    <img src="{{ food_item.image.url }}" alt="{{ food_item.name }}">
+                {% else %}
+                    <img src="{% static 'image/default_food.jpg' %}" alt="Default Image">
+                {% endif %}
+            </div>
+            <div class="food-info">
+                <h2>{{ food_item.name }}</h2>
+                <p>{{ food_item.description }}</p>
+                <p class="price">Giá: ${{ food_item.price|floatformat:2 }}</p>
+            </div>
+        </div>
+        
+        <form action="{% if order %}{% url 'service:update_food_order' roombooking_id=room_booking.id order_id=order.id %}{% else %}{% url 'service:order_food' roombooking_id=room_booking.id food_id=food_item.id %}{% endif %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="quantity">Số lượng:</label>
+                <input type="number" id="quantity" name="quantity" value="{% if order %}{{ order.quantity }}{% else %}1{% endif %}" min="1" required>
+            </div>
+            <div>
+                <textarea name="special_instructions" id="special_instructions" rows="2" placeholder="Ghi chú....">{% if order %}{{ order.special_instructions }}{% endif %}</textarea>
+            </div>
+            
+            {% if order %}
+                <!-- Chỉ hiển thị thời gian đặt nếu là cập nhật đơn đặt món -->
+                <div class="form-group">
+                    <label for="order_time">Thời gian đặt món:</label>
+                    <p>{{ order.order_time|date:"d/m/Y H:i" }}</p>
+                </div>
+            {% else %}
+                <!-- Cho phép chọn thời gian nếu là đặt món mới -->
+                <div class="form-group">
+                    <label for="order_time">Thời gian đặt món (trong khoảng thời gian đặt phòng):</label>
+                    <input type="datetime-local" id="order_time" name="order_time" min="{{ room_booking.date_start|date:'Y-m-d\\TH:i' }}" max="{{ room_booking.date_end|date:'Y-m-d\\TH:i' }}" required>
+                </div>
+            {% endif %}
+
+            <button type="submit" class="order-btn">{% if order %}Cập nhật món{% else %}Đặt món{% endif %}</button>
+        </form>
+    </div>
+
+
+
+
+    <style>
+        .container_f {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .food-detail {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .food-image img {
+            width: 200px;
+            height: auto;
+            margin-right: 20px;
+            border-radius: 8px;
+        }
+        .food-info {
+            flex-grow: 1;
+        }
+        .food-info h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff5733;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"], input[type="datetime-local"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;        
+        }
+        .order-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .order-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+{% endblock main_content %}
