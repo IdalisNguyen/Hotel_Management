@@ -531,7 +531,11 @@
             </div>
 
             <h3 class="blog_heading">
-                {{ vehicle.type }} - Giá thuê: ${{ vehicle.daily_rate|floatformat:2 }}
+                {{ vehicle.type }}
+                <ul>
+                    <li>{{vehicle.hour_rate}}/h</li>
+                    <li>{{vehicle.daily_rate}}/ngày</li>
+                </ul>
             </h3>
 
             <p class="blog_text">
@@ -542,12 +546,14 @@
 
             <div class="view_and_like">
                 <div class="view">
-                    <p>Available: {{ vehicle.available|yesno:"Yes,No" }}</p>
+                    <p>Còn lại: {{ vehicle.available }} xe</p>
                 </div>
                 <div class="like">
                     <p>Rating: <i class="fa-solid fa-star"></i> 4.5</p> <!-- Giả định có rating -->
                 </div>
             </div>
+
+            <button><a href="{% url 'service:vehicle_detail' vehicle.id %}">Book Now</a></button>
 
             <!-- Form chọn ngày -->
             <div class="date-picker" style="display: none;">

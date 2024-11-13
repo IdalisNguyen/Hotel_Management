@@ -92,12 +92,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'room_images')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'hotel_management',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
-        'PORT': '6666',
+        'PORT': '3360',
     }
 }
 
@@ -126,7 +126,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+
+TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
 USE_I18N = True
 

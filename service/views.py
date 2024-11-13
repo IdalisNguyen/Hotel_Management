@@ -2,6 +2,10 @@ from django.shortcuts import render, get_object_or_404,redirect
 from room.models import RoomBooking  # Đảm bảo đường dẫn đến model RoomBooking là chính xác
 from .models import FoodItem, Vehicle,FoodOrder,VehicleOrder  # Import các model khác
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
+from .models import Vehicle
+from django.http import JsonResponse
 
 def service(request, roombooking_id):
     # Lấy thông tin phòng dựa trên roombooking_id
@@ -56,3 +60,33 @@ def delete_food_order(request, roombooking_id, order_id):
     
     # Chuyển hướng về trang chi tiết đặt phòng
     return redirect('room:room_booking_detail', booking_id=roombooking_id)
+
+@user_passes_test(lambda u: u.is_superuser)
+def superuser_page(request):
+    return render(request, 'superuser_page.html')
+
+def vehicle_detail(request, id):
+    vehicle = get_object_or_404(Vehicle, id=id)
+    booking = RoomBooking.objects.filter(user=request.user).order_by('-date_start').first()
+    return render(request, 'vehicle_detail.html', {'vehicle': vehicle, 'booking': booking})
+    # return render(request, 'vehicle_detail.html', {'vehicle': vehicle})
+
+@login_required
+def book_vehicle(request, id):
+    if request.method == 'POST':
+        vehicle = get_object_or_404(Vehicle, id=id)
+        rental_time = request.POST.get('rental_time')
+        return_time = request.POST.get('return_time')
+
+        # Tạo đơn đặt xe
+        vehicle_order = VehicleOrder.objects.create(
+            user=request.user,
+            vehicle=vehicle,
+            rental_time=rental_time,
+            return_time=return_time
+        )
+
+        # Trả về phản hồi JSON
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False})
