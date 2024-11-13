@@ -520,7 +520,8 @@
 
   <div class="blog_box">
     {% for vehicle in vehicles %}  <!-- Lặp qua danh sách xe -->
-    <div class="blog_card">
+    <div class="blog_card" >
+        <a href="{% url 'service:vehicle_details' %}">
         <div class="blog_img">
             <img src="{% if vehicle.image %}{{ vehicle.image.url }}{% else %}{% static 'image/default_vehicle.jpg' %}{% endif %}" alt="{{ vehicle.type }}">
         </div>
@@ -548,9 +549,10 @@
                     <p>Rating: <i class="fa-solid fa-star"></i> 4.5</p> <!-- Giả định có rating -->
                 </div>
             </div>
-
+        </a>
             <!-- Form chọn ngày -->
             <div class="date-picker" style="display: none;">
+                {% comment %} <form action="{{ service:}}"></form> {% endcomment %}
                 <label for="rental_date">Chọn ngày nhận xe:</label>
                 <input type="date" id="rental_date" name="rental_date" class="date-input">
                 

@@ -56,3 +56,6 @@ def delete_food_order(request, roombooking_id, order_id):
     
     # Chuyển hướng về trang chi tiết đặt phòng
     return redirect('room:room_booking_detail', booking_id=roombooking_id)
+
+def order_vehicle(request):
+    return render(request,"vehicle_details.html")

@@ -50,6 +50,7 @@
      <div class="col-md-4">
       <div class="card shadow-lg border-0 rounded">
           <div class="card-body">
+            <h6 class="card-title text-primary fw-bold">LỊCH PHÒNG TRỐNG</h6>
             <div class="container">
               <div class="calendar">
                 <div class="header">
@@ -84,8 +85,7 @@
           </div>
 
           <div class="card-body">
-              <h6 class="card-title text-primary fw-bold">VỊ TRÍ KHÁCH SẠN</h6>
-              <p class="card-text">TP Buôn Ma Thuột, Vietnam</p>
+
               <form method="POST" action="{% url 'room:add_to_cart' room.id %}">
 
               <!-- Trường Ngày Check In -->
