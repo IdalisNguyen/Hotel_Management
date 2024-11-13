@@ -33,7 +33,6 @@
                 </div>
             </div>
 
-            
             <!-- Thông tin các đơn đặt đồ ăn -->
             <div class="card shadow-lg mb-4 border-0 rounded">
                 <div class="card-body">
@@ -53,9 +52,12 @@
                                     </div>
                                     <span class="badge badge-primary badge-pill">{{ order.total_price }} Đ</span>
 
-                                    {% comment %} <a href="{% url 'service:delete_food_order' roombooking_id=booking.id order_id=order.id %}" class="btn btn-danger btn-sm ml-2">
+                                    <a href="{% url 'service:delete_food_order' roombooking_id=booking.id order_id=order.id %}" class="btn btn-danger btn-sm ml-2">
                                         Xóa
-                                    </a> {% endcomment %}
+                                    </a>
+                                    <a href="{% url 'service:update_food_order' roombooking_id=booking.id order_id=order.id %}" class="btn btn-warning btn-sm ml-2">
+                                        Sửa
+                                    </a>                                    
                                 </li>
                             {% endfor %}
                         </ul>
@@ -63,7 +65,7 @@
                         <p>Không có dịch vụ nào.</p>
                     {% endif %}
                 </div>
-            </div>
+            </div>        
         </div>
 
 

@@ -171,9 +171,9 @@
                 <p class="price">${{ item.price|floatformat:2 }}</p>
                 
                 <!-- Nút Order Now với URL chứa cả roombooking_id và food_id -->
-                <a href="{% url 'service:order_food' roombooking_id=roombooking_id food_id=item.id %}" class="menu_btn">
+                <a href="{% url 'service:food_order_detail' roombooking_id=roombooking_id food_id=item.id %}" class="menu_btn">
                     <i class="fa-solid fa-burger"></i>Order Now
-                </a>
+                </a>            
             </div>
         </div>
         {% endfor %}
@@ -569,7 +569,7 @@
 
 <!--Oder-->
 
-<div class="oder">
+<!-- <div class="oder">
 
   <h1><span>Oder</span>Now</h1>
 
@@ -625,7 +625,7 @@
 
   </div>
 
-</div>
+</div> -->
 <script>
     function toggleDatePicker(element) {
         // Lấy phần tử cha của biểu tượng để tìm date-picker

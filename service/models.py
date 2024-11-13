@@ -2,7 +2,7 @@ from django.db import models
 from room.models import RoomBooking 
 from django.contrib.auth import get_user_model
 from django.contrib import admin
-
+from django.utils import timezone
 User = get_user_model()
 
 # Các model liên quan đến đồ ăn
@@ -57,16 +57,20 @@ class FoodOrder(models.Model):
     image = models.ImageField(upload_to='food_order_images/', blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        # Tính tổng giá dựa trên số lượng và giá của món ăn
-        self.total_price = self.quantity * self.food_item.price
-        # Cập nhật tổng giá tiền của RoomBooking
-        self.room_booking.subtotal += self.total_price
-        self.room_booking.save()
-        super().save(*args, **kwargs)
+        # Kiểm tra thời điểm đặt món trong khoảng thời gian đặt phòng
+        if self.room_booking.date_start <= timezone.now() <= self.room_booking.date_end:
+            # Tính tổng giá dựa trên số lượng và giá của món ăn
+            self.total_price = self.quantity * self.food_item.price
+            # Cập nhật tổng giá tiền của RoomBooking
+            self.room_booking.subtotal += self.total_price
+            self.room_booking.save()
+            super().save(*args, **kwargs)
+        else:
+            raise ValueError("Thời điểm đặt món phải nằm trong khoảng thời gian đặt phòng.")
 
     def __str__(self):
         return f"Đơn đặt bởi {self.user} cho món {self.food_item.name} trong phòng {self.room_booking.room.name}"
-
+    
 # Model cho đơn đặt phương tiện
 class VehicleOrder(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)

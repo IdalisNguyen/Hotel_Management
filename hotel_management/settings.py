@@ -97,7 +97,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
-        'PORT': '6666',
+        'PORT': '3366',
     }
 }
 
@@ -126,8 +126,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Ho_Chi_Minh'  # Ví dụ: múi giờ Việt Nam
 USE_I18N = True
 
 USE_TZ = True

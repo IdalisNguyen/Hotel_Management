@@ -356,6 +356,7 @@ def room_booked(request):
     return render(request, "room_booked.html", {"bookings": bookings})
 
 
+@login_required
 def room_booking_detail(request, booking_id):
     # Lấy thông tin đặt phòng
     booking = get_object_or_404(RoomBooking, id=booking_id)
